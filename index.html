@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Merchant Services Field Guide — Dr. Gerald Mitchell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0F2545;
+  --navy-light: #1B3A6B;
+  --navy-mid: #2A4E8C;
+  --gold: #C9A84C;
+  --gold-light: #F0D080;
+  --gold-pale: #FDF6E3;
+  --cream: #FAF8F4;
+  --white: #FFFFFF;
+  --ink: #1A1A1A;
+  --ink-mid: #444444;
+  --ink-light: #777777;
+  --ink-faint: #AAAAAA;
+  --border: rgba(15,37,69,0.12);
+  --border-gold: rgba(201,168,76,0.3);
+  --surface: rgba(255,255,255,0.7);
+  --blue-pale: #EBF1FA;
+  --teal-pale: #E4F4EE;
+  --amber-pale: #FDF3E3;
+  --purple-pale: #F0EEFF;
+  --coral-pale: #FDEEE9;
+  --green-pale: #EAFAF0;
+  --blue-dark: #0C3D7A;
+  --teal-dark: #0A5C40;
+  --amber-dark: #6B4200;
+  --purple-dark: #3D2B8C;
+  --coral-dark: #7A2510;
+  --green-dark: #1A5C30;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ── SIDEBAR ── */
+.app { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: var(--navy);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 100;
+  overflow-y: auto;
+}
+
+.sidebar-brand {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.sidebar-logo {
+  font-family: 'DM Serif Display', serif;
+  font-size: 18px;
+  color: var(--gold-light);
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+
+.sidebar-sub {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.sidebar-nav { padding: 16px 12px; flex: 1; }
+
+.nav-section-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 12px 12px 6px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: rgba(255,255,255,0.55);
+  font-size: 14px;
+  font-weight: 400;
+  transition: all 0.15s;
+  margin-bottom: 2px;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+
+.nav-item:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.85); }
+.nav-item.active { background: rgba(201,168,76,0.15); color: var(--gold-light); font-weight: 500; }
+.nav-item.active .nav-icon { color: var(--gold); }
+
+.nav-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.nav-item.active .nav-icon { opacity: 1; }
+
+.sidebar-footer {
+  padding: 16px 24px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  font-size: 12px;
+  color: rgba(255,255,255,0.3);
+}
+
+.sidebar-footer strong { color: rgba(255,255,255,0.5); display: block; }
+
+/* ── MAIN ── */
+.main {
+  margin-left: 260px;
+  flex: 1;
+  min-height: 100vh;
+}
+
+.topbar {
+  background: rgba(250,248,244,0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.topbar-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 20px;
+  color: var(--navy);
+}
+
+.topbar-badge {
+  font-size: 11px;
+  font-weight: 500;
+  background: var(--gold-pale);
+  color: var(--amber-dark);
+  border: 1px solid var(--border-gold);
+  padding: 4px 12px;
+  border-radius: 20px;
+  letter-spacing: 0.03em;
+}
+
+.content { padding: 36px 40px; max-width: 1000px; }
+
+/* ── SECTION VIEWS ── */
+.view { display: none; animation: fadeIn 0.2s ease; }
+.view.active { display: block; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── TYPOGRAPHY ── */
+.view-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 30px;
+  color: var(--navy);
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+
+.view-subtitle {
+  font-size: 15px;
+  color: var(--ink-light);
+  margin-bottom: 28px;
+  font-weight: 300;
+}
+
+.section-rule {
+  height: 1px;
+  background: var(--border);
+  margin: 28px 0;
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 14px;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 14px;
+}
+
+.card-navy {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: white;
+}
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+
+/* ── TAGS ── */
+.tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+  letter-spacing: 0.02em;
+}
+
+.tag-blue { background: var(--blue-pale); color: var(--blue-dark); }
+.tag-teal { background: var(--teal-pale); color: var(--teal-dark); }
+.tag-amber { background: var(--amber-pale); color: var(--amber-dark); }
+.tag-purple { background: var(--purple-pale); color: var(--purple-dark); }
+.tag-coral { background: var(--coral-pale); color: var(--coral-dark); }
+.tag-green { background: var(--green-pale); color: var(--green-dark); }
+
+/* ── ECOSYSTEM ── */
+.eco-flow {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.eco-node {
+  border-radius: 10px;
+  padding: 14px 10px;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  border: 1px solid transparent;
+}
+
+.eco-node:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+
+.eco-node.highlight {
+  background: var(--navy) !important;
+  border-color: var(--gold) !important;
+}
+
+.eco-node.highlight .eco-title { color: var(--gold-light) !important; }
+.eco-node.highlight .eco-sub { color: rgba(255,255,255,0.7) !important; }
+.eco-node.highlight .eco-badge { background: var(--gold); color: var(--navy); }
+
+.eco-title { font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+.eco-sub { font-size: 11px; line-height: 1.4; }
+
+.eco-badge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 10px;
+  margin-top: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.eco-arrows {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--ink-light);
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.eco-arrows span { color: var(--navy-light); font-weight: 500; }
+
+.eco-detail {
+  background: var(--blue-pale);
+  border: 1px solid rgba(27,58,107,0.15);
+  border-radius: 10px;
+  padding: 16px 20px;
+  display: none;
+  margin-bottom: 16px;
+  animation: fadeIn 0.2s ease;
+}
+
+.eco-detail.visible { display: block; }
+.eco-detail-title { font-weight: 600; color: var(--navy); margin-bottom: 6px; font-size: 14px; }
+.eco-detail-text { font-size: 13px; color: var(--ink-mid); line-height: 1.6; }
+
+/* ── COMPETITOR TABLE ── */
+.comp-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.comp-table th { background: var(--navy); color: rgba(255,255,255,0.7); font-weight: 500; padding: 10px 14px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; }
+.comp-table th:first-child { border-radius: 8px 0 0 0; }
+.comp-table th:last-child { border-radius: 0 8px 0 0; }
+.comp-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--ink-mid); line-height: 1.5; }
+.comp-table tr:last-child td { border-bottom: none; }
+.comp-table tr:nth-child(even) td { background: var(--cream); }
+.comp-table td:first-child { font-weight: 600; color: var(--navy-light); }
+
+/* ── CONCEPT CARDS ── */
+.filter-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.filter-btn {
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--ink-mid);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'DM Sans', sans-serif;
+}
+.filter-btn:hover { border-color: var(--navy-mid); color: var(--navy); }
+.filter-btn.active { background: var(--navy); color: white; border-color: var(--navy); }
+
+.concept-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 12px;
+  border-left: 3px solid transparent;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.concept-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+.concept-card[data-cat="pricing"] { border-left-color: #C9A84C; }
+.concept-card[data-cat="performance"] { border-left-color: #1D9E75; }
+.concept-card[data-cat="environment"] { border-left-color: #378ADD; }
+.concept-card[data-cat="compliance"] { border-left-color: #7F77DD; }
+.concept-card[data-cat="client"] { border-left-color: #D85A30; }
+
+.concept-term { font-size: 17px; font-weight: 600; color: var(--navy); margin-bottom: 5px; font-family: 'DM Serif Display', serif; }
+.concept-def { font-size: 14px; color: var(--ink-mid); line-height: 1.6; margin-bottom: 12px; }
+
+.concept-expand {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 12px;
+  color: var(--ink-light);
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+}
+.concept-expand:hover { background: var(--cream); border-color: var(--navy-mid); color: var(--navy); }
+
+.concept-extra { display: none; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+.concept-extra.open { display: block; animation: fadeIn 0.2s; }
+
+.mini-label { font-size: 11px; font-weight: 600; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; }
+
+.client-box {
+  background: var(--amber-pale);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--amber-dark);
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.bridge-box {
+  background: var(--blue-pale);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--blue-dark);
+  line-height: 1.6;
+  font-style: italic;
+}
+
+/* ── FLASHCARDS ── */
+.fc-wrap { perspective: 1200px; height: 240px; cursor: pointer; margin-bottom: 20px; user-select: none; }
+.fc-inner { position: relative; width: 100%; height: 100%; transition: transform 0.45s cubic-bezier(0.4,0,0.2,1); transform-style: preserve-3d; }
+.fc-wrap.flipped .fc-inner { transform: rotateY(180deg); }
+
+.fc-front, .fc-back {
+  position: absolute; width: 100%; height: 100%;
+  backface-visibility: hidden;
+  border-radius: 14px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 32px;
+  text-align: center;
+  border: 1px solid transparent;
+}
+
+.fc-front {
+  background: var(--navy);
+  background-image: radial-gradient(ellipse at top right, rgba(201,168,76,0.15) 0%, transparent 60%);
+}
+
+.fc-back {
+  background: var(--white);
+  border-color: var(--border);
+  transform: rotateY(180deg);
+}
+
+.fc-cat-label { font-size: 11px; color: rgba(255,255,255,0.4); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; }
+.fc-term-text { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--gold-light); margin-bottom: 10px; line-height: 1.2; }
+.fc-hint-text { font-size: 13px; color: rgba(255,255,255,0.35); }
+.fc-def-text { font-size: 15px; color: var(--ink-mid); line-height: 1.65; margin-bottom: 10px; }
+.fc-back-cat { font-size: 11px; color: var(--ink-faint); }
+
+.fc-controls { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.fc-btn {
+  padding: 9px 22px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--ink-mid);
+  font-size: 14px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+}
+.fc-btn:hover { background: var(--navy); color: white; border-color: var(--navy); }
+.fc-counter { font-size: 13px; color: var(--ink-faint); }
+
+.fc-progress { height: 3px; background: var(--border); border-radius: 2px; margin-bottom: 16px; }
+.fc-progress-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width 0.3s; }
+
+.fc-shuffle-btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px dashed var(--border-gold);
+  background: var(--gold-pale);
+  color: var(--amber-dark);
+  font-size: 13px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+  margin-top: 8px;
+}
+.fc-shuffle-btn:hover { background: #f5e9c0; }
+
+/* ── QUIZ ── */
+.quiz-start-card {
+  background: var(--navy);
+  background-image: radial-gradient(ellipse at bottom left, rgba(201,168,76,0.2) 0%, transparent 60%);
+  border-radius: 16px;
+  padding: 48px;
+  text-align: center;
+  color: white;
+  margin-bottom: 20px;
+}
+
+.quiz-start-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 32px;
+  color: var(--gold-light);
+  margin-bottom: 10px;
+}
+
+.quiz-start-sub { font-size: 15px; color: rgba(255,255,255,0.6); margin-bottom: 28px; font-weight: 300; }
+
+.start-btn {
+  background: var(--gold);
+  color: var(--navy);
+  border: none;
+  padding: 14px 36px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+  letter-spacing: 0.02em;
+}
+.start-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+.quiz-progress-bar { height: 4px; background: var(--border); border-radius: 2px; margin-bottom: 20px; }
+.quiz-progress-fill { height: 100%; background: var(--navy); border-radius: 2px; transition: width 0.4s ease; }
+
+.quiz-num { font-size: 12px; color: var(--ink-faint); margin-bottom: 12px; letter-spacing: 0.05em; text-transform: uppercase; }
+.quiz-q { font-family: 'DM Serif Display', serif; font-size: 21px; color: var(--navy); line-height: 1.45; margin-bottom: 22px; }
+
+.quiz-opt {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 13px 18px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  color: var(--ink-mid);
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 9px;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+  line-height: 1.5;
+}
+.quiz-opt:hover:not(:disabled) { border-color: var(--navy-mid); background: var(--blue-pale); color: var(--navy); }
+.quiz-opt.correct { background: var(--teal-pale); border-color: #1D9E75; color: var(--teal-dark); font-weight: 500; }
+.quiz-opt.wrong { background: var(--coral-pale); border-color: #D85A30; color: var(--coral-dark); }
+
+.quiz-feedback {
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-size: 14px;
+  line-height: 1.65;
+  margin-top: 10px;
+  display: none;
+}
+.quiz-feedback.correct { background: var(--teal-pale); color: var(--teal-dark); border: 1px solid rgba(29,158,117,0.25); }
+.quiz-feedback.wrong { background: var(--coral-pale); color: var(--coral-dark); border: 1px solid rgba(216,90,48,0.25); }
+
+.next-btn {
+  background: var(--navy);
+  color: white;
+  border: none;
+  padding: 11px 28px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  margin-top: 14px;
+  transition: all 0.15s;
+  float: right;
+}
+.next-btn:hover { background: var(--navy-light); }
+
+.score-display {
+  font-family: 'DM Serif Display', serif;
+  font-size: 64px;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+/* ── STORY ── */
+.positioning-card {
+  background: var(--navy);
+  border-radius: 14px;
+  padding: 28px 32px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.positioning-card::before {
+  content: '"';
+  font-family: 'DM Serif Display', serif;
+  font-size: 120px;
+  color: rgba(201,168,76,0.15);
+  position: absolute;
+  top: -20px; left: 16px;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.positioning-quote {
+  font-family: 'DM Serif Display', serif;
+  font-size: 17px;
+  color: rgba(255,255,255,0.85);
+  line-height: 1.7;
+  font-style: italic;
+  position: relative;
+  z-index: 1;
+}
+
+.positioning-attr {
+  font-size: 12px;
+  color: rgba(255,255,255,0.35);
+  margin-top: 14px;
+  letter-spacing: 0.03em;
+}
+
+.story-block {
+  border-left: 3px solid var(--gold);
+  padding-left: 20px;
+  margin-bottom: 24px;
+}
+
+.story-theme {
+  font-family: 'DM Serif Display', serif;
+  font-size: 19px;
+  color: var(--navy);
+  margin-bottom: 12px;
+}
+
+.story-point {
+  font-size: 14px;
+  color: var(--ink-mid);
+  line-height: 1.7;
+  padding: 8px 14px;
+  background: var(--cream);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  border-left: 2px solid var(--border);
+}
+
+/* ── SMART QUESTIONS ── */
+.q-context-group { margin-bottom: 28px; }
+
+.q-context-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.q-context-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.q-context-title { font-size: 15px; font-weight: 600; color: var(--navy); }
+.q-context-sub { font-size: 12px; color: var(--ink-light); }
+
+.q-item {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.q-item:hover { border-color: var(--navy-mid); box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+
+.q-context-tag { font-size: 11px; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 5px; }
+.q-text { font-size: 14px; color: var(--ink); line-height: 1.6; font-style: italic; }
+
+.q-copied {
+  font-size: 11px;
+  color: var(--teal-dark);
+  background: var(--teal-pale);
+  padding: 2px 8px;
+  border-radius: 10px;
+  display: inline-block;
+  margin-top: 6px;
+  display: none;
+}
+
+/* ── CHECKLIST ── */
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.check-item:last-child { border-bottom: none; }
+.check-item:hover .check-circle { border-color: var(--navy); }
+
+.check-circle {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+  margin-top: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  background: var(--white);
+}
+.check-circle.done { background: var(--navy); border-color: var(--navy); }
+.check-check { display: none; }
+.check-circle.done .check-check { display: block; }
+
+.check-content { flex: 1; }
+.check-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 3px; }
+.check-title.done { color: var(--ink-faint); text-decoration: line-through; }
+.check-detail { font-size: 13px; color: var(--ink-light); line-height: 1.5; }
+.check-detail.done { color: var(--ink-faint); }
+
+.reset-btn {
+  padding: 9px 20px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--ink-light);
+  font-size: 13px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  margin-top: 16px;
+  transition: all 0.15s;
+}
+.reset-btn:hover { border-color: var(--navy); color: var(--navy); }
+
+/* ── MOBILE ── */
+.mobile-menu-btn {
+  display: none;
+  position: fixed;
+  top: 12px; left: 12px;
+  z-index: 200;
+  background: var(--navy);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  width: 36px; height: 36px;
+  cursor: pointer;
+  font-size: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); transition: transform 0.25s; }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; }
+  .mobile-menu-btn { display: flex; }
+  .content { padding: 20px 16px; }
+  .topbar { padding: 12px 16px 12px 56px; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .eco-flow { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .quiz-start-card { padding: 32px 20px; }
+  .positioning-card { padding: 20px; }
+}
+
+/* ── UTILITY ── */
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-logo">Merchant Services<br>Field Guide</div>
+      <div class="sidebar-sub">JPMorgan Chase · RM Payments VP</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Study</div>
+      <button class="nav-item active" onclick="showView('ecosystem', this)">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12"/></svg>
+        Ecosystem
+      </button>
+      <button class="nav-item" onclick="showView('concepts', this)">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+        Core concepts
+      </button>
+      <button class="nav-item" onclick="showView('flashcards', this)">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M16 2H8a1 1 0 00-1 1v3h10V3a1 1 0 00-1-1z"/></svg>
+        Flashcards
+      </button>
+      <button class="nav-item" onclick="showView('quiz', this)">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        Quiz
+      </button>
+
+      <div class="nav-section-label" style="margin-top:12px;">Prepare</div>
+      <button class="nav-item" onclick="showView('story', this)">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Your story
+      </button>
+      <button class="nav-item" onclick="showView('questions', this)">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.42-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+        Smart questions
+      </button>
+      <button class="nav-item" onclick="showView('checklist', this)">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        Pre-meeting
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <strong>Dr. Gerald Mitchell</strong>
+      DrGeraldMitchell@gmail.com
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topbar-title">Payments Ecosystem</div>
+      <div class="topbar-badge">JPMorgan Chase — RM Interview Prep</div>
+    </div>
+
+    <div class="content">
+
+      <!-- ── ECOSYSTEM ── -->
+      <div id="view-ecosystem" class="view active">
+        <div class="view-title">The payments ecosystem</div>
+        <div class="view-subtitle">Where JPMorgan sits — and why it matters in every client conversation</div>
+
+        <div class="eco-flow">
+          <div class="eco-node" style="background:#EBF1FA; border-color:rgba(27,58,107,0.15);" onclick="showEcoDetail('cardholder')">
+            <div class="eco-title" style="color:#0C3D7A;">Cardholder</div>
+            <div class="eco-sub" style="color:#378ADD;">Customer making the purchase</div>
+            <div class="eco-badge" style="background:#378ADD; color:white;">tap for detail</div>
+          </div>
+          <div class="eco-node" style="background:#F0EEFF; border-color:rgba(127,119,221,0.2);" onclick="showEcoDetail('issuer')">
+            <div class="eco-title" style="color:#3D2B8C;">Issuing bank</div>
+            <div class="eco-sub" style="color:#7F77DD;">Customer's bank. Approves & declines.</div>
+            <div class="eco-badge" style="background:#7F77DD; color:white;">tap for detail</div>
+          </div>
+          <div class="eco-node" style="background:#F1EFE8; border-color:rgba(136,135,128,0.2);" onclick="showEcoDetail('network')">
+            <div class="eco-title" style="color:#444441;">Card network</div>
+            <div class="eco-sub" style="color:#5F5E5A;">Visa / MC / Amex. Sets the rules.</div>
+            <div class="eco-badge" style="background:#888780; color:white;">tap for detail</div>
+          </div>
+          <div class="eco-node highlight" onclick="showEcoDetail('jpmorgan')">
+            <div class="eco-title">JPMorgan ★</div>
+            <div class="eco-sub" style="color:rgba(255,255,255,0.75);">Acquiring bank + processor</div>
+            <div class="eco-badge">Your role</div>
+          </div>
+          <div class="eco-node" style="background:#FDEEE9; border-color:rgba(216,90,48,0.2);" onclick="showEcoDetail('merchant')">
+            <div class="eco-title" style="color:#7A2510;">Merchant</div>
+            <div class="eco-sub" style="color:#D85A30;">Your Middle Market client</div>
+            <div class="eco-badge" style="background:#D85A30; color:white;">tap for detail</div>
+          </div>
+        </div>
+
+        <div class="eco-arrows">
+          Transaction flows: <span>Cardholder</span> → <span>Issuer</span> → <span>Network</span> → <span style="color:var(--gold); font-weight:600;">JPMorgan (acquirer)</span> → <span>Merchant funds settled</span>
+        </div>
+
+        <div id="eco-detail-box" class="eco-detail"></div>
+
+        <div class="section-rule"></div>
+        <div class="section-label">JPMorgan's competitive position</div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="tag tag-blue" style="margin-bottom:12px;">Why clients choose JPMorgan</div>
+            <div style="font-size:13px; color:var(--ink-mid); line-height:1.8;">
+              ✦ Scale — billions of transactions, enterprise-grade uptime<br>
+              ✦ Full-bank integration — treasury, FX, commercial banking<br>
+              ✦ Data & analytics at scale — payment intelligence<br>
+              ✦ Security — fraud tools, tokenization, 3DS support<br>
+              ✦ Relationship model — dedicated RM, not a call center
+            </div>
+          </div>
+          <div class="card">
+            <div class="tag tag-coral" style="margin-bottom:12px;">Competitive landscape</div>
+            <table class="comp-table">
+              <thead><tr><th>Competitor</th><th>Know this</th></tr></thead>
+              <tbody>
+                <tr><td>Fiserv / First Data</td><td>Largest mid-market incumbent; often the player you're displacing</td></tr>
+                <tr><td>Worldpay (FIS)</td><td>Global scale, strong e-commerce; comparable enterprise profile</td></tr>
+                <tr><td>Stripe</td><td>Tech-first, growing upmarket; differentiate on relationship + bank depth</td></tr>
+                <tr><td>Square / Block</td><td>SMB-focused; less relevant for Middle Market</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── CONCEPTS ── -->
+      <div id="view-concepts" class="view">
+        <div class="view-title">Core concepts</div>
+        <div class="view-subtitle">19 terms — know these cold, with your bridge back to your experience</div>
+
+        <div class="filter-row">
+          <button class="filter-btn active" onclick="filterConcepts('all', this)">All (19)</button>
+          <button class="filter-btn" onclick="filterConcepts('pricing', this)">Pricing & economics</button>
+          <button class="filter-btn" onclick="filterConcepts('performance', this)">Transaction performance</button>
+          <button class="filter-btn" onclick="filterConcepts('environment', this)">Environment</button>
+          <button class="filter-btn" onclick="filterConcepts('compliance', this)">Compliance</button>
+          <button class="filter-btn" onclick="filterConcepts('client', this)">Client management</button>
+        </div>
+
+        <div id="concepts-list"></div>
+      </div>
+
+      <!-- ── FLASHCARDS ── -->
+      <div id="view-flashcards" class="view">
+        <div class="view-title">Flashcards</div>
+        <div class="view-subtitle">Tap the card to reveal the definition</div>
+
+        <div class="fc-progress"><div class="fc-progress-fill" id="fc-bar"></div></div>
+
+        <div class="fc-wrap" id="fc-wrap" onclick="flipFC()">
+          <div class="fc-inner">
+            <div class="fc-front">
+              <div class="fc-cat-label" id="fc-cat"></div>
+              <div class="fc-term-text" id="fc-term"></div>
+              <div class="fc-hint-text">tap to reveal</div>
+            </div>
+            <div class="fc-back">
+              <div class="fc-def-text" id="fc-def"></div>
+              <div class="fc-back-cat" id="fc-back-cat"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fc-controls">
+          <button class="fc-btn" onclick="fcNav(-1)">← Previous</button>
+          <span class="fc-counter" id="fc-counter"></span>
+          <button class="fc-btn" onclick="fcNav(1)">Next →</button>
+        </div>
+
+        <div class="card" style="margin-top:8px;">
+          <div class="section-label" style="margin-bottom:8px;">Your bridge for this concept</div>
+          <div class="bridge-box" id="fc-bridge" style="font-style:normal; background:var(--blue-pale); color:var(--blue-dark); border-radius:8px; padding:12px 16px; font-size:13px; line-height:1.65;"></div>
+        </div>
+
+        <button class="fc-shuffle-btn" onclick="shuffleFC()">⟳ Shuffle cards</button>
+      </div>
+
+      <!-- ── QUIZ ── -->
+      <div id="view-quiz" class="view">
+        <div id="quiz-start-screen">
+          <div class="quiz-start-card">
+            <div class="quiz-start-title">Knowledge check</div>
+            <div class="quiz-start-sub">10 questions covering core merchant services concepts,<br>tailored to your background and interview context</div>
+            <button class="start-btn" onclick="startQuiz()">Begin quiz →</button>
+          </div>
+        </div>
+
+        <div id="quiz-main-screen" class="hidden">
+          <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="q-prog"></div></div>
+          <div class="quiz-num" id="q-num"></div>
+          <div class="quiz-q" id="q-text"></div>
+          <div id="q-opts"></div>
+          <div class="quiz-feedback" id="q-feedback"></div>
+          <div style="overflow:hidden;"><button class="next-btn hidden" id="q-next" onclick="nextQ()">Next question →</button></div>
+        </div>
+
+        <div id="quiz-done-screen" class="hidden">
+          <div class="card" style="text-align:center; padding:40px;">
+            <div style="font-size:13px; color:var(--ink-faint); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.1em;">Final score</div>
+            <div class="score-display" id="q-score"></div>
+            <div style="font-size:15px; color:var(--ink-mid); margin:12px 0 24px;" id="q-msg"></div>
+            <button class="start-btn" onclick="restartQuiz()">Retake quiz</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── STORY ── -->
+      <div id="view-story" class="view">
+        <div class="view-title">Your story</div>
+        <div class="view-subtitle">Four bridge themes — connect every payments concept back to your experience</div>
+
+        <div class="positioning-card">
+          <div class="positioning-quote">"I bring something rare to this role: deep experience managing enterprise relationships and driving measurable outcomes, combined with genuine technology and product fluency. Most RMs can own a client relationship. Fewer can also help a client think through integrated payments strategy, diagnose conversion friction, or evaluate how their payment infrastructure connects to their broader technology stack."</div>
+          <div class="positioning-attr">— Your core positioning statement</div>
+        </div>
+
+        <div class="story-block">
+          <div class="story-theme">Relationship management</div>
+          <div class="story-point">At Reflekt Me, I was the primary point of contact for enterprise retail clients — managing onboarding, performance, escalations, and ongoing optimization against defined SLAs.</div>
+          <div class="story-point">At FSU, I managed relationships across academic departments and external partners — coordinating stakeholders with competing priorities toward shared institutional goals. That internal navigation complexity is exactly what this role demands.</div>
+          <div class="story-point">At SNHU, I served as liaison between platforms serving 280,000+ users and executive stakeholders — translating performance data into strategic recommendations and facilitating executive reviews.</div>
+        </div>
+
+        <div class="story-block">
+          <div class="story-theme">Revenue & growth accountability</div>
+          <div class="story-point">At Reflekt Me, our platform drove a 75% conversion rate for enterprise clients — a direct revenue outcome tied to client renewal and expansion decisions. I was accountable for client performance metrics, not just delivery.</div>
+          <div class="story-point">At FSU, I oversaw $2M+ in combined budgets, ensuring resource allocation was tied to measurable program outcomes. Financial discipline in relationship management is not new to me.</div>
+          <div class="story-point">My QBR experience was exactly re-contracting in practice: making the case for continued and expanded investment with data, analysis, and strategic framing.</div>
+        </div>
+
+        <div class="story-block">
+          <div class="story-theme">Technology & product fluency</div>
+          <div class="story-point">Integrated payments is where the market is moving, and my product background lets me have that conversation with clients in a way most RMs cannot. I understand APIs, integration complexity, and translating technical capability into business value.</div>
+          <div class="story-point">At Reflekt Me, I managed platform integrations with enterprise retail clients — understanding the client's tech stack and how our solution fit into it was essential. That's the same conversation an RM has with a client about payment gateway integration.</div>
+          <div class="story-point">At Fathom, I worked on a platform integrating AI, CRM, and workforce tools — I understand where integration friction points live and how to diagnose them.</div>
+        </div>
+
+        <div class="story-block">
+          <div class="story-theme">Consultative, data-driven approach</div>
+          <div class="story-point">At SNHU, I built reporting frameworks and dashboards to track engagement and operational performance — then used those insights to drive executive-level decisions. That's the QBR skill set.</div>
+          <div class="story-point">At Reflekt Me, we led with conversion data and business impact — not product features. That's consultative selling, and it's the posture this role requires.</div>
+          <div class="story-point">At FSU, early alert systems identified at-risk students before outcomes deteriorated. Same pattern in payments: monitor authorization rates, identify decline trends, intervene before the client feels the pain.</div>
+        </div>
+      </div>
+
+      <!-- ── QUESTIONS ── -->
+      <div id="view-questions" class="view">
+        <div class="view-title">Smart questions</div>
+        <div class="view-subtitle">Click any question to copy it. Use 2 per conversation — internalize, don't read.</div>
+
+        <div class="q-context-group">
+          <div class="q-context-header">
+            <div class="q-context-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="1.8"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            </div>
+            <div>
+              <div class="q-context-title">Hiring manager / exec level</div>
+              <div class="q-context-sub">Strategic depth — show you think about the business, not just the role</div>
+            </div>
+          </div>
+          <div class="q-item" onclick="copyQ(this)">
+            <div class="q-context-tag">On client strategy</div>
+            <div class="q-text">"How do you think about the balance between defending existing volume and pursuing incremental business within a client relationship — does that shift by client maturity?"</div>
+            <span class="q-copied">Copied!</span>
+          </div>
+          <div class="q-item" onclick="copyQ(this)">
+            <div class="q-context-tag">On team structure</div>
+            <div class="q-text">"How closely does the RM team coordinate with treasury services on joint client strategy — is that integration formal or relationship-driven?"</div>
+            <span class="q-copied">Copied!</span>
+          </div>
+          <div class="q-item" onclick="copyQ(this)">
+            <div class="q-context-tag">On technology direction</div>
+            <div class="q-text">"Where do you see integrated payments heading for your Middle Market clients — is that a growth opportunity the team is actively pursuing?"</div>
+            <span class="q-copied">Copied!</span>
+          </div>
+          <div class="q-item" onclick="copyQ(this)">
+            <div class="q-context-tag">On success metrics</div>
+            <div class="q-text">"Beyond revenue targets, what does a high-performing RM look like in this organization — what behaviors or approaches distinguish the best ones?"</div>
+            <span class="q-copied">Copied!</span>
+          </div>
+        </div>
+
+        <div class="q-context-group">
+          <div class="q-context-header">
+            <div class="q-context-icon" style="background:var(--teal-dark);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="1.8"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.42-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            </div>
+            <div>
+              <div class="q-context-title">Peer RM or team member</div>
+              <div class="q-context-sub">Genuine curiosity — learn from someone doing the job</div>
+            </div>
+          </div>
+          <div class="q-item" onclick="copyQ(this)">
+            <div class="q-context-tag">On the client experience</div>
+            <div class="q-text">"What does a typical QBR look like for your clients — how much of it is performance reporting vs. strategic conversation?"</div>
+            <span class="q-copied">Copied!</span>
+          </div>
+          <div class="q-item" onclick="copyQ(this)">
+            <div class="q-context-tag">On the learning curve</div>
+            <div class="q-text">"What took you the longest to get fluent on — the product knowledge, the internal navigation, or the client dynamics?"</div>
+            <span class="q-copied">Copied!</span>
+          </div>
+          <div class="q-item" onclick="copyQ(this)">
+            <div class="q-context-tag">On internal collaboration</div>
+            <div class="q-text">"How do you work with commercial bankers day to day — mostly on joint client opportunities or more reactive when issues surface?"</div>
+            <span class="q-copied">Copied!</span>
+          </div>
+          <div class="q-item" onclick="copyQ(this)">
+            <div class="q-context-tag">On pain points</div>
+            <div class="q-text">"Where do clients push back most — is it on pricing, service issues, or something else entirely?"</div>
+            <span class="q-copied">Copied!</span>
+          </div>
+        </div>
+
+        <div class="q-context-group">
+          <div class="q-context-header">
+            <div class="q-context-icon" style="background:var(--amber-dark);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="1.8"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+            <div>
+              <div class="q-context-title">Partner or exec director in payments</div>
+              <div class="q-context-sub">Market-level thinking — show you see the industry, not just the role</div>
+            </div>
+          </div>
+          <div class="q-item" onclick="copyQ(this)">
+            <div class="q-context-tag">On the market</div>
+            <div class="q-text">"How is the shift toward embedded and integrated payments showing up in your Middle Market segment — are clients asking for it or being led to it?"</div>
+            <span class="q-copied">Copied!</span>
+          </div>
+          <div class="q-item" onclick="copyQ(this)">
+            <div class="q-context-tag">On differentiation</div>
+            <div class="q-text">"What's the strongest case you make to a client evaluating JPMorgan against a technology-first processor like Stripe or Adyen?"</div>
+            <span class="q-copied">Copied!</span>
+          </div>
+          <div class="q-item" onclick="copyQ(this)">
+            <div class="q-context-tag">On cross-sell</div>
+            <div class="q-text">"How coordinated is the cross-sell motion between Merchant Services and Payments Treasury Services — is there a formal process or does it depend on the relationship?"</div>
+            <span class="q-copied">Copied!</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── CHECKLIST ── -->
+      <div id="view-checklist" class="view">
+        <div class="view-title">Pre-meeting checklist</div>
+        <div class="view-subtitle">Five minutes before every conversation. Check each item as you go.</div>
+
+        <div class="card">
+          <div id="checklist-items"></div>
+        </div>
+
+        <button class="reset-btn" onclick="resetChecklist()">↺ Reset checklist</button>
+      </div>
+
+    </div><!-- /content -->
+  </main>
+</div>
+
+<script>
+const ecoDetails = {
+  cardholder: { title: "Cardholder", text: "The customer making a purchase with a credit or debit card. Their experience — speed, approval rate, security — directly drives merchant revenue. Their bank (the issuer) decides in milliseconds whether to approve or decline the transaction." },
+  issuer: { title: "Issuing bank", text: "The bank that issued the card to the customer (e.g., Bank of America, Chase for consumer cards). The issuer sets interchange rates and is the entity that approves or declines transactions. When auth rates are low, the issuer's risk models are often the root cause — an important client conversation." },
+  network: { title: "Card network (Visa / Mastercard / Amex)", text: "Card networks set the rules all parties must follow and publish interchange rate schedules. They don't process transactions — they provide the rails and governance. Merchants must comply with network rules around chargebacks, PCI compliance, and data standards." },
+  jpmorgan: { title: "JPMorgan — the acquirer (★ your role)", text: "JPMorgan acts as the acquiring bank and processor: they hold a processing relationship with the merchant, route transactions through the network, settle funds, and manage the overall payments infrastructure. As RM, you are the face of this relationship. You are accountable for the health, growth, and retention of every merchant in your portfolio." },
+  merchant: { title: "Merchant (your client)", text: "Middle Market businesses — large enough to need enterprise payments infrastructure, complex enough to benefit from a dedicated RM relationship. They care about authorization rates, interchange costs, chargeback management, PCI compliance, and increasingly, integrated payments that connect to their own systems." }
+};
+
+function showEcoDetail(key) {
+  const box = document.getElementById('eco-detail-box');
+  const d = ecoDetails[key];
+  box.innerHTML = `<div class="eco-detail-title">${d.title}</div><div class="eco-detail-text">${d.text}</div>`;
+  box.classList.add('visible');
+}
+
+const concepts = [
+  { term: "Interchange", cat: "pricing", tag: "Pricing & economics", def: "Fee paid from the merchant's bank (acquirer) to the cardholder's bank (issuer) on every card transaction. Set by card networks. Rates vary by card type, merchant category, and how the transaction is processed.", client: "Often the largest cost in a merchant's payment stack. Optimizing it is a key client value driver and a core RM conversation.", bridge: "Cost optimization through platform changes — I focused on improving conversion economics at Reflekt Me, the same levers-and-margins mindset." },
+  { term: "Discount rate", cat: "pricing", tag: "Pricing & economics", def: "The total rate a merchant pays for card processing, which includes interchange plus the acquirer's (JPMorgan's) markup and any additional fees.", client: "Directly affects margin on every sale — merchants are acutely aware of this number and compare it across processors.", bridge: "I understand how platform fees compound at scale; the same P&L sensitivity conversation applies." },
+  { term: "Interchange optimization", cat: "pricing", tag: "Pricing & economics", def: "Strategies to qualify transactions at lower interchange tiers — e.g., passing Level 2/3 data (tax amount, PO number) for B2B transactions, or encouraging card-present transactions for in-store clients.", client: "Can meaningfully reduce processing costs for clients with high B2B or commercial card volume — a real dollar value the RM can demonstrate.", bridge: "Data-driven optimization is core to my background — I look for levers others miss and quantify them in terms the client cares about." },
+  { term: "Basis points (bps)", cat: "pricing", tag: "Pricing & economics", def: "1/100th of a percent. All pricing and rate changes in payments are discussed in basis points. 25 bps = 0.25%. 100 bps = 1%.", client: "Seemingly small rate differences have large dollar impacts at Middle Market volume — this is the language of every pricing conversation.", bridge: "I understand how marginal differences compound at scale — key to the Middle Market conversation and to defending re-contracting positions." },
+  { term: "Authorization rate", cat: "performance", tag: "Transaction performance", def: "Percentage of attempted transactions that are successfully approved by the issuing bank. A critical performance metric for any merchant accepting cards.", client: "A 1-2% improvement can mean millions in recovered revenue at scale. Diagnosing low auth rates and fixing them is one of the highest-value things an RM can do for a client.", bridge: "Directly analogous to conversion rate optimization at Reflekt Me — I improved add-to-cart and checkout rates by identifying and removing friction points in the transaction flow." },
+  { term: "Decline rate", cat: "performance", tag: "Transaction performance", def: "Percentage of transactions declined — split between hard declines (fraud, invalid card) and soft declines (temporary holds, velocity limits) that may be retryable.", client: "High decline rates frustrate customers and erode merchant revenue. Diagnosing the split between hard and soft declines, and addressing the root causes, is a core client health conversation.", bridge: "Root cause analysis across complex systems is my pattern — I used this at SNHU and FSU to identify where service breakdowns were occurring and implement corrective action." },
+  { term: "Chargeback", cat: "performance", tag: "Transaction performance", def: "A transaction reversal initiated by the cardholder through their issuing bank. The merchant bears the cost, plus a chargeback fee, and must defend the transaction if they want to recover the funds.", client: "Chargebacks are costly and administratively burdensome. High chargeback ratios can result in fines, increased processing rates, or loss of processing privileges entirely.", bridge: "SLA management at Reflekt Me included escalation protocols for client disputes and performance failures — same stakes, same discipline, different domain." },
+  { term: "Chargeback ratio", cat: "performance", tag: "Transaction performance", def: "Percentage of transactions that result in chargebacks over a given period. Card networks set thresholds — typically 1% for Visa — that trigger consequences when exceeded.", client: "Merchants exceeding network thresholds face escalating penalties. Monitoring this as part of client health management is an RM responsibility.", bridge: "I built monitoring frameworks at SNHU to track performance against institutional thresholds and trigger corrective action before consequences materialized." },
+  { term: "Card-present (CP)", cat: "environment", tag: "Transaction environment", def: "A transaction where the physical card is used at a terminal — chip-and-pin, tap-to-pay, magnetic swipe. The card and cardholder are physically present at the point of sale.", client: "Lower fraud risk = lower interchange rates. Middle Market clients with retail or hospitality locations benefit from maximizing CP transactions where possible.", bridge: "Physical vs. digital channel tradeoffs — I understand how the transaction environment affects both risk pricing and operational complexity." },
+  { term: "Card-not-present (CNP)", cat: "environment", tag: "Transaction environment", def: "A transaction where card details are entered remotely — e-commerce, phone orders, recurring billing. The card is not physically present.", client: "Higher fraud risk = higher interchange rates plus more complex fraud management. Most e-commerce volume is CNP, making fraud tools and auth rate optimization especially important.", bridge: "My Reflekt Me work was entirely in the CNP e-commerce environment — I understand the conversion, fraud, and user experience dynamics intimately." },
+  { term: "Integrated payments", cat: "environment", tag: "Transaction environment", def: "Payment processing embedded directly into a merchant's own software — their ERP, point-of-sale system, CRM, or proprietary platform — rather than using a separate payment terminal or gateway.", client: "Reduces manual reconciliation, improves data quality, and significantly increases switching costs for the merchant. Strategically important for both client value and retention.", bridge: "Product integration is my core skill — I built and managed platform integrations at Reflekt Me, understanding both the technical complexity and the client relationship dimensions." },
+  { term: "Omnichannel payments", cat: "environment", tag: "Transaction environment", def: "A unified payment experience and reporting structure across all channels — in-store, online, mobile app, phone — with consolidated transaction data and consistent customer experience.", client: "Middle Market clients operating across multiple channels need unified reporting, consistent reconciliation, and a coherent customer experience. This is increasingly a table-stakes expectation.", bridge: "Platform consistency across user touchpoints was a central focus of my UX and product strategy work — the same design principle applies here." },
+  { term: "PCI-DSS", cat: "compliance", tag: "Compliance & security", def: "Payment Card Industry Data Security Standard — the compliance framework all merchants and processors must meet to protect cardholder data. Requirements vary by transaction volume.", client: "Non-compliance is a liability — fines, reputational risk, and increased audit scrutiny. RMs who help clients navigate PCI certification build credibility and deepen relationships.", bridge: "Compliance frameworks and audit readiness were central to my work in higher education — accreditation standards require the same systematic documentation and gap-remediation discipline." },
+  { term: "Tokenization", cat: "compliance", tag: "Compliance & security", def: "The process of replacing sensitive cardholder data (the actual card number) with a non-sensitive token for storage and transmission. The token has no value outside the specific system that issued it.", client: "Reduces PCI compliance scope and fraud risk. Increasingly expected by enterprise clients as a baseline security practice — a conversation starter about infrastructure modernization.", bridge: "Data abstraction and security architecture were part of my platform work at Reflekt Me — understanding how to isolate sensitive data flows is a technical concept I'm comfortable with." },
+  { term: "3D Secure (3DS)", cat: "compliance", tag: "Compliance & security", def: "An authentication protocol that adds an additional verification step for online (CNP) transactions — a one-time passcode or bank app authentication — to reduce fraud and shift liability.", client: "Reduces CNP fraud liability for merchants. Required in some international markets and increasingly common for high-value or high-risk transaction categories.", bridge: "Authentication friction is a classic UX tradeoff I've navigated — adding security steps reduces fraud but can hurt conversion, and finding the right balance requires data." },
+  { term: "QBR", cat: "client", tag: "Client management", def: "Quarterly Business Review — a structured executive meeting where the RM presents performance data, trend analysis, market context, and strategic recommendations to key client stakeholders.", client: "The primary formal touchpoint for demonstrating RM value. Clients who receive a thoughtful QBR — data plus insight plus recommendation — are more likely to renew and expand.", bridge: "I ran QBR-equivalent reviews at SNHU — presenting performance analytics, identifying risks and opportunities, and making executive-level recommendations. This is a muscle I've built." },
+  { term: "Re-contracting", cat: "client", tag: "Client management", def: "The process of renewing or restructuring a client's payment processing agreement — often with updated rates, revised product scope, or new terms — at the end of a contract term.", client: "Core revenue defense activity. Losing a re-contracting opportunity to a competitor is expensive and signals relationship failure. RMs need to demonstrate value clearly before the renewal moment.", bridge: "Retention strategy is embedded in my background — at Reflekt Me I managed client relationships that had renewal decision points, and at FSU I drove student persistence before the attrition moment." },
+  { term: "Book of business", cat: "client", tag: "Client management", def: "The full portfolio of client relationships an RM is accountable for — typically measured by number of accounts, total processing volume, and total net revenue generated.", client: "RMs are evaluated on the health and growth of their book — retention rate, net revenue growth, and cross-sell penetration across the portfolio.", bridge: "I managed program portfolios at FSU (5,000+ students) and client portfolios at Reflekt Me — portfolio-level thinking with accountability for aggregate outcomes is familiar territory." },
+  { term: "Net revenue", cat: "client", tag: "Client management", def: "Revenue after interchange costs and other direct processing expenses — what JPMorgan actually earns from a client relationship. This is what the RM's annual plan is based on.", client: "RMs are accountable for margin, not just volume. Understanding the cost structure and the levers that affect net revenue is essential for smart client prioritization.", bridge: "I oversaw $2M+ in combined budgets at FSU with accountability for resource-to-outcome alignment. P&L discipline — knowing the difference between revenue and profit — is not new to me." }
+];
+
+let currentFilter = 'all';
+
+function filterConcepts(cat, btn) {
+  currentFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderConcepts();
+}
+
+function renderConcepts() {
+  const list = document.getElementById('concepts-list');
+  const catTagMap = { pricing:'tag-amber', performance:'tag-teal', environment:'tag-blue', compliance:'tag-purple', client:'tag-coral' };
+  const filtered = currentFilter === 'all' ? concepts : concepts.filter(c => c.cat === currentFilter);
+  list.innerHTML = filtered.map((c, i) => `
+    <div class="concept-card" data-cat="${c.cat}">
+      <span class="tag ${catTagMap[c.cat]}">${c.tag}</span>
+      <div class="concept-term">${c.term}</div>
+      <div class="concept-def">${c.def}</div>
+      <button class="concept-expand" onclick="toggleConcept(this)">Show client impact & your bridge ↓</button>
+      <div class="concept-extra">
+        <div class="mini-label" style="margin-bottom:6px;">Why it matters to clients</div>
+        <div class="client-box">${c.client}</div>
+        <div class="mini-label" style="margin-bottom:6px;">Your bridge</div>
+        <div class="bridge-box">${c.bridge}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleConcept(btn) {
+  const extra = btn.nextElementSibling;
+  const open = extra.classList.toggle('open');
+  btn.textContent = open ? 'Hide ↑' : 'Show client impact & your bridge ↓';
+}
+
+let fcIndex = 0, fcArr = [...Array(concepts.length).keys()], fcFlipped = false;
+
+function renderFC() {
+  const c = concepts[fcArr[fcIndex]];
+  document.getElementById('fc-cat').textContent = c.tag;
+  document.getElementById('fc-term').textContent = c.term;
+  document.getElementById('fc-def').textContent = c.def;
+  document.getElementById('fc-back-cat').textContent = c.tag;
+  document.getElementById('fc-bridge').textContent = c.bridge;
+  document.getElementById('fc-counter').textContent = `${fcIndex + 1} of ${concepts.length}`;
+  document.getElementById('fc-bar').style.width = ((fcIndex + 1) / concepts.length * 100) + '%';
+  const wrap = document.getElementById('fc-wrap');
+  wrap.classList.remove('flipped');
+  fcFlipped = false;
+}
+
+function flipFC() {
+  fcFlipped = !fcFlipped;
+  document.getElementById('fc-wrap').classList.toggle('flipped', fcFlipped);
+}
+
+function fcNav(dir) {
+  fcIndex = (fcIndex + dir + concepts.length) % concepts.length;
+  renderFC();
+}
+
+function shuffleFC() {
+  for (let i = fcArr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [fcArr[i], fcArr[j]] = [fcArr[j], fcArr[i]];
+  }
+  fcIndex = 0;
+  renderFC();
+}
+
+const quizData = [
+  { q: "JPMorgan's role in every card transaction is:", opts: ["Issuing bank — they issued the card to the customer","Card network — they set interchange rules","Acquiring bank — they process transactions on behalf of the merchant","Card processor only, separate from JPMorgan"], ans: 2, exp: "JPMorgan is the acquiring bank and processor — they settle funds on behalf of merchants. As RM, you are the face of that acquiring relationship." },
+  { q: "A merchant's authorization rate drops from 95% to 93%. What's the right framing for the business impact?", opts: ["A minor technical issue the processing team should handle","A 2% improvement can mean millions in recovered revenue at scale — this is a client health priority","Normal variance, unlikely to affect the client significantly","Probably means more customers are using debit instead of credit"], ans: 1, exp: "Authorization rate is one of the most direct revenue levers. At Middle Market scale, even 1-2% improvement represents significant recovered revenue — this is a core RM value conversation." },
+  { q: "Which best describes interchange?", opts: ["The fee JPMorgan charges the merchant for processing","The fee the merchant's bank pays to the cardholder's bank on every transaction","The penalty when a merchant has too many chargebacks","The monthly gateway subscription cost"], ans: 1, exp: "Interchange flows from the acquiring bank to the issuing bank. It's typically the largest component of a merchant's processing cost — optimizing it is a real client value lever." },
+  { q: "A client asks why their e-commerce transactions cost more than their in-store ones. The right explanation:", opts: ["E-commerce uses newer technology that costs more to maintain","Card-present (in-store) carries lower fraud risk = lower rates. Card-not-present (e-commerce) carries higher risk = higher rates.","The client is on an old pricing plan — recommend re-contracting","E-commerce goes through more network hops, increasing cost"], ans: 1, exp: "CP vs. CNP is fundamental. The fraud risk differential drives the pricing differential. Understanding this lets you have a consultative conversation about channel mix and cost optimization." },
+  { q: "What is a chargeback ratio, and why does it matter?", opts: ["% of transactions manually reviewed — too high means slow processing","Ratio of declined to approved transactions","% of transactions reversed by cardholders — exceeding network thresholds (~1%) triggers penalties and potential loss of processing rights","Spread between interchange paid and revenue earned"], ans: 2, exp: "High chargeback ratios trigger card network penalties — fines, increased rates, and potentially losing processing privileges. Monitoring this is a key part of proactive client health management." },
+  { q: "How does Gerald's Reflekt Me experience connect most directly to authorization rate optimization?", opts: ["Both involve managing large teams across time zones","Improving conversion rates by identifying and removing transaction friction — directly analogous to improving auth rates","Both required working with card networks and issuing banks","The platform processed payments directly"], ans: 1, exp: "At Reflekt Me, Gerald improved add-to-cart and conversion rates by diagnosing friction in digital flows. Auth rate optimization follows the same pattern: find where transactions fail, understand why, remove the friction." },
+  { q: "Integrated payments is strategically important because:", opts: ["It qualifies merchants for lower interchange rates","It embeds payment processing into the merchant's own software — reducing friction, improving data, and increasing switching costs","It eliminates PCI compliance requirements for the merchant","It allows merchants to process transactions without a card network"], ans: 1, exp: "Integrated payments is a key growth area where Gerald's product background is a genuine differentiator. Understanding APIs, integration complexity, and client tech stacks positions him differently than a traditional RM." },
+  { q: "PCI-DSS is primarily about:", opts: ["Ensuring merchants pay processing fees on time","Protecting cardholder data — all merchants must meet this compliance standard","Keeping authorization rates above a minimum threshold","Certifying payment terminals meet hardware standards"], ans: 1, exp: "PCI-DSS protects cardholder data. RMs who help clients navigate certification build credibility and deepen the relationship — it's a service that goes beyond transaction processing." },
+  { q: "What is a QBR and why is it the RM's primary value moment?", opts: ["Quarterly Budget Review — when the client reviews JPMorgan's annual pricing","Quality Business Rating — an internal client score","Quarterly Business Review — a structured executive meeting where the RM presents performance data and strategic recommendations","Quick Balance Reconciliation — a monthly settlement process"], ans: 2, exp: "The QBR is where RMs demonstrate strategic value. Showing up with data, market insight, and recommendations — not just reporting — separates high-performing RMs. Gerald has direct experience running these at SNHU." },
+  { q: "When asked about your payments experience gap, the best approach is:", opts: ["Pivot quickly to a stronger topic","Acknowledge it directly — frame it as a deliberate pivot, demonstrate domain fluency you've built, connect your tech + relationship background as a differentiator","Emphasize that the hiring manager already vouched for your soft skills","Focus entirely on Reflekt Me e-commerce experience as equivalent"], ans: 1, exp: "The hiring manager has vouched for your soft skills. Your job now is to show credible domain curiosity — someone who has done serious homework and brings a complementary skillset. Confidence plus honesty is the right posture." }
+];
+
+let qIdx = 0, qScore = 0, qAnswered = false, qShuffled = [];
+
+function startQuiz() {
+  document.getElementById('quiz-start-screen').classList.add('hidden');
+  document.getElementById('quiz-main-screen').classList.remove('hidden');
+  qShuffled = [...quizData].sort(() => Math.random() - 0.5);
+  qIdx = 0; qScore = 0;
+  renderQ();
+}
+
+function renderQ() {
+  qAnswered = false;
+  const q = qShuffled[qIdx];
+  document.getElementById('q-prog').style.width = (qIdx / qShuffled.length * 100) + '%';
+  document.getElementById('q-num').textContent = `Question ${qIdx + 1} of ${qShuffled.length}`;
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('q-feedback').style.display = 'none';
+  document.getElementById('q-next').classList.add('hidden');
+  document.getElementById('q-opts').innerHTML = q.opts.map((o, i) =>
+    `<button class="quiz-opt" onclick="answer(${i})">${o}</button>`
+  ).join('');
+}
+
+function answer(i) {
+  if (qAnswered) return;
+  qAnswered = true;
+  const q = qShuffled[qIdx];
+  document.querySelectorAll('.quiz-opt').forEach(b => b.disabled = true);
+  document.querySelectorAll('.quiz-opt')[q.ans].classList.add('correct');
+  const correct = i === q.ans;
+  if (!correct) document.querySelectorAll('.quiz-opt')[i].classList.add('wrong');
+  if (correct) qScore++;
+  const fb = document.getElementById('q-feedback');
+  fb.style.display = 'block';
+  fb.className = 'quiz-feedback ' + (correct ? 'correct' : 'wrong');
+  fb.textContent = (correct ? '✓ Correct. ' : '✗ Not quite. ') + q.exp;
+  document.getElementById('q-next').classList.remove('hidden');
+}
+
+function nextQ() {
+  qIdx++;
+  if (qIdx >= qShuffled.length) {
+    document.getElementById('quiz-main-screen').classList.add('hidden');
+    document.getElementById('quiz-done-screen').classList.remove('hidden');
+    document.getElementById('q-score').textContent = qScore + '/' + qShuffled.length;
+    const p = qScore / qShuffled.length;
+    document.getElementById('q-msg').textContent = p < 0.6 ? 'Keep reviewing — revisit the Core Concepts section and try again.' : p < 0.8 ? 'Good foundation. Review the concepts you missed.' : p < 0.9 ? 'Strong. You are showing real domain fluency.' : 'Excellent. You are ready for these conversations.';
+  } else { renderQ(); }
+}
+
+function restartQuiz() {
+  document.getElementById('quiz-done-screen').classList.add('hidden');
+  document.getElementById('quiz-start-screen').classList.remove('hidden');
+}
+
+const checkItems = [
+  { title: "Know who you're meeting", detail: "RM/peer, exec, or partner in payments? Adjust question set from Smart Questions accordingly." },
+  { title: "Anchor the ecosystem", detail: "Re-read the Ecosystem section quickly. Remind yourself: JPMorgan is the acquirer. You are the face of that relationship." },
+  { title: "Pick 2-3 concepts to reference", detail: "Choose from Core Concepts most likely to come up in this conversation. Have your bridge statement ready for each." },
+  { title: "Choose your bridge theme", detail: "Which of the 4 themes from Your Story is most relevant? Lead with that one if given the chance to introduce yourself." },
+  { title: "Prepare 2 smart questions", detail: "Select from Smart Questions. Internalize them so they feel natural — don't read them from notes." },
+  { title: "Ready your gap response", detail: "'I've been doing serious work to build domain fluency — here's what I've learned and where I'm still developing.' Confidence plus honesty." }
+];
+
+let checkState = checkItems.map(() => false);
+
+function renderChecklist() {
+  document.getElementById('checklist-items').innerHTML = checkItems.map((item, i) => `
+    <div class="check-item" onclick="toggleCheck(${i})">
+      <div class="check-circle ${checkState[i] ? 'done' : ''}">
+        <svg class="check-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>
+      </div>
+      <div class="check-content">
+        <div class="check-title ${checkState[i] ? 'done' : ''}">${item.title}</div>
+        <div class="check-detail ${checkState[i] ? 'done' : ''}">${item.detail}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleCheck(i) { checkState[i] = !checkState[i]; renderChecklist(); }
+function resetChecklist() { checkState = checkItems.map(() => false); renderChecklist(); }
+
+const viewTitles = {
+  ecosystem: 'Payments Ecosystem',
+  concepts: 'Core Concepts',
+  flashcards: 'Flashcards',
+  quiz: 'Knowledge Quiz',
+  story: 'Your Story',
+  questions: 'Smart Questions',
+  checklist: 'Pre-Meeting Checklist'
+};
+
+function showView(id, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  document.getElementById('topbar-title').textContent = viewTitles[id] || id;
+  if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+function copyQ(item) {
+  const text = item.querySelector('.q-text').textContent;
+  navigator.clipboard.writeText(text).catch(() => {});
+  const copied = item.querySelector('.q-copied');
+  copied.style.display = 'inline-block';
+  setTimeout(() => copied.style.display = 'none', 1800);
+}
+
+renderConcepts();
+renderFC();
+renderChecklist();
+</script>
+</body>
+</html>
