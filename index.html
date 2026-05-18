@@ -1,1092 +1,713 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Merchant Services Field Guide — Dr. Gerald Mitchell</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Merchant Services BRM — Scenario Trainer</title>
 <style>
-:root {
-  --navy:#0F2545;--navy-light:#1B3A6B;--navy-mid:#2A4E8C;
-  --gold:#C9A84C;--gold-light:#F0D080;--gold-pale:#FDF6E3;
-  --cream:#FAF8F4;--white:#FFFFFF;
-  --ink:#1A1A1A;--ink-mid:#444444;--ink-light:#777777;--ink-faint:#AAAAAA;
-  --border:rgba(15,37,69,0.12);--border-gold:rgba(201,168,76,0.3);
-  --blue-pale:#EBF1FA;--teal-pale:#E4F4EE;--amber-pale:#FDF3E3;
-  --purple-pale:#F0EEFF;--coral-pale:#FDEEE9;--green-pale:#EAFAF0;
-  --blue-dark:#0C3D7A;--teal-dark:#0A5C40;--amber-dark:#6B4200;
-  --purple-dark:#3D2B8C;--coral-dark:#7A2510;--green-dark:#1A5C30;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;font-size:15px;line-height:1.6;}
-.app{display:flex;min-height:100vh;}
-.sidebar{width:260px;flex-shrink:0;background:var(--navy);min-height:100vh;display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;overflow-y:auto;}
-.sidebar-brand{padding:24px 24px 18px;border-bottom:1px solid rgba(255,255,255,0.08);}
-.sidebar-logo{font-family:'DM Serif Display',serif;font-size:17px;color:var(--gold-light);line-height:1.3;margin-bottom:3px;}
-.sidebar-sub{font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:.05em;text-transform:uppercase;}
-.sidebar-nav{padding:12px 10px;flex:1;}
-.nav-group-label{font-size:10px;font-weight:600;color:rgba(255,255,255,0.28);text-transform:uppercase;letter-spacing:.1em;padding:10px 12px 5px;}
-.nav-item{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:7px;cursor:pointer;color:rgba(255,255,255,0.5);font-size:13px;font-weight:400;transition:all .15s;margin-bottom:1px;border:none;background:none;width:100%;text-align:left;}
-.nav-item:hover{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.82);}
-.nav-item.active{background:rgba(201,168,76,0.14);color:var(--gold-light);font-weight:500;}
-.nav-icon{width:16px;height:16px;flex-shrink:0;opacity:.65;}
-.nav-item.active .nav-icon{opacity:1;}
-.sidebar-footer{padding:14px 22px;border-top:1px solid rgba(255,255,255,0.07);font-size:11px;color:rgba(255,255,255,0.28);}
-.sidebar-footer strong{color:rgba(255,255,255,0.45);display:block;}
-.main{margin-left:260px;flex:1;min-height:100vh;}
-.topbar{background:rgba(250,248,244,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 36px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
-.topbar-title{font-family:'DM Serif Display',serif;font-size:19px;color:var(--navy);}
-.topbar-badge{font-size:11px;font-weight:500;background:var(--gold-pale);color:var(--amber-dark);border:1px solid var(--border-gold);padding:3px 11px;border-radius:20px;}
-.content{padding:32px 36px;max-width:980px;}
-.view{display:none;animation:fadeIn .2s ease;}
-.view.active{display:block;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
-.view-title{font-family:'DM Serif Display',serif;font-size:28px;color:var(--navy);margin-bottom:5px;line-height:1.2;}
-.view-subtitle{font-size:14px;color:var(--ink-light);margin-bottom:24px;font-weight:300;}
-.section-rule{height:1px;background:var(--border);margin:24px 0;}
-.section-label{font-size:11px;font-weight:600;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;}
-.card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:12px;}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
-.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;}
-.tag{display:inline-block;font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px;margin-bottom:9px;letter-spacing:.02em;}
-.tag-blue{background:var(--blue-pale);color:var(--blue-dark);}
-.tag-teal{background:var(--teal-pale);color:var(--teal-dark);}
-.tag-amber{background:var(--amber-pale);color:var(--amber-dark);}
-.tag-purple{background:var(--purple-pale);color:var(--purple-dark);}
-.tag-coral{background:var(--coral-pale);color:var(--coral-dark);}
-.tag-green{background:var(--green-pale);color:var(--green-dark);}
-/* eco */
-.eco-flow{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-bottom:16px;}
-.eco-node{border-radius:10px;padding:13px 8px;text-align:center;cursor:pointer;transition:transform .15s,box-shadow .15s;border:1px solid transparent;}
-.eco-node:hover{transform:translateY(-2px);box-shadow:0 5px 18px rgba(0,0,0,.09);}
-.eco-node.highlight{background:var(--navy)!important;border-color:var(--gold)!important;}
-.eco-node.highlight .eco-title{color:var(--gold-light)!important;}
-.eco-node.highlight .eco-sub{color:rgba(255,255,255,.7)!important;}
-.eco-node.highlight .eco-badge{background:var(--gold);color:var(--navy);}
-.eco-title{font-size:12px;font-weight:600;margin-bottom:4px;}
-.eco-sub{font-size:11px;line-height:1.4;}
-.eco-badge{display:inline-block;font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;margin-top:5px;text-transform:uppercase;letter-spacing:.05em;}
-.eco-arrows{display:flex;align-items:center;justify-content:center;gap:5px;font-size:12px;color:var(--ink-light);margin-bottom:18px;flex-wrap:wrap;}
-.eco-arrows span{color:var(--navy-light);font-weight:500;}
-.eco-detail{background:var(--blue-pale);border:1px solid rgba(27,58,107,.15);border-radius:10px;padding:14px 18px;display:none;margin-bottom:14px;animation:fadeIn .2s ease;}
-.eco-detail.visible{display:block;}
-.eco-detail-title{font-weight:600;color:var(--navy);margin-bottom:5px;font-size:14px;}
-.eco-detail-text{font-size:13px;color:var(--ink-mid);line-height:1.6;}
-.comp-table{width:100%;border-collapse:collapse;font-size:13px;}
-.comp-table th{background:var(--navy);color:rgba(255,255,255,.7);font-weight:500;padding:9px 13px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;}
-.comp-table th:first-child{border-radius:8px 0 0 0;}.comp-table th:last-child{border-radius:0 8px 0 0;}
-.comp-table td{padding:9px 13px;border-bottom:1px solid var(--border);color:var(--ink-mid);line-height:1.5;}
-.comp-table tr:last-child td{border-bottom:none;}
-.comp-table tr:nth-child(even) td{background:var(--cream);}
-.comp-table td:first-child{font-weight:600;color:var(--navy-light);}
-/* concepts */
-.filter-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px;}
-.filter-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--white);color:var(--ink-mid);font-size:13px;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;}
-.filter-btn:hover{border-color:var(--navy-mid);color:var(--navy);}
-.filter-btn.active{background:var(--navy);color:white;border-color:var(--navy);}
-.concept-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:11px;border-left:3px solid transparent;}
-.concept-card[data-cat="pricing"]{border-left-color:#C9A84C;}
-.concept-card[data-cat="performance"]{border-left-color:#1D9E75;}
-.concept-card[data-cat="environment"]{border-left-color:#378ADD;}
-.concept-card[data-cat="compliance"]{border-left-color:#7F77DD;}
-.concept-card[data-cat="client"]{border-left-color:#D85A30;}
-.concept-term{font-size:16px;font-weight:600;color:var(--navy);margin-bottom:4px;font-family:'DM Serif Display',serif;}
-.concept-def{font-size:14px;color:var(--ink-mid);line-height:1.6;margin-bottom:11px;}
-.concept-expand{background:none;border:1px solid var(--border);border-radius:6px;padding:4px 11px;font-size:12px;color:var(--ink-light);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
-.concept-expand:hover{background:var(--cream);border-color:var(--navy-mid);color:var(--navy);}
-.concept-extra{display:none;margin-top:13px;padding-top:13px;border-top:1px solid var(--border);}
-.concept-extra.open{display:block;animation:fadeIn .2s;}
-.mini-label{font-size:11px;font-weight:600;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;}
-.client-box{background:var(--amber-pale);border-radius:8px;padding:9px 13px;font-size:13px;color:var(--amber-dark);line-height:1.6;margin-bottom:9px;}
-.bridge-box{background:var(--blue-pale);border-radius:8px;padding:9px 13px;font-size:13px;color:var(--blue-dark);line-height:1.6;}
-/* flashcards */
-.fc-wrap{perspective:1200px;height:230px;cursor:pointer;margin-bottom:18px;user-select:none;}
-.fc-inner{position:relative;width:100%;height:100%;transition:transform .45s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d;}
-.fc-wrap.flipped .fc-inner{transform:rotateY(180deg);}
-.fc-front,.fc-back{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center;border:1px solid transparent;}
-.fc-front{background:var(--navy);background-image:radial-gradient(ellipse at top right,rgba(201,168,76,.15) 0%,transparent 60%);}
-.fc-back{background:var(--white);border-color:var(--border);transform:rotateY(180deg);}
-.fc-cat-label{font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;}
-.fc-term-text{font-family:'DM Serif Display',serif;font-size:26px;color:var(--gold-light);margin-bottom:9px;line-height:1.2;}
-.fc-hint-text{font-size:13px;color:rgba(255,255,255,.33);}
-.fc-def-text{font-size:14px;color:var(--ink-mid);line-height:1.65;margin-bottom:9px;}
-.fc-back-cat{font-size:11px;color:var(--ink-faint);}
-.fc-controls{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-.fc-btn{padding:8px 20px;border-radius:8px;border:1px solid var(--border);background:var(--white);color:var(--ink-mid);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
-.fc-btn:hover{background:var(--navy);color:white;border-color:var(--navy);}
-.fc-counter{font-size:13px;color:var(--ink-faint);}
-.fc-progress{height:3px;background:var(--border);border-radius:2px;margin-bottom:14px;}
-.fc-progress-fill{height:100%;background:var(--gold);border-radius:2px;transition:width .3s;}
-.fc-shuffle-btn{display:block;width:100%;padding:9px;border-radius:8px;border:1px dashed var(--border-gold);background:var(--gold-pale);color:var(--amber-dark);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;margin-top:8px;}
-.fc-shuffle-btn:hover{background:#f5e9c0;}
-/* quiz */
-.quiz-start-card{background:var(--navy);background-image:radial-gradient(ellipse at bottom left,rgba(201,168,76,.2) 0%,transparent 60%);border-radius:16px;padding:44px;text-align:center;color:white;margin-bottom:18px;}
-.quiz-start-title{font-family:'DM Serif Display',serif;font-size:30px;color:var(--gold-light);margin-bottom:9px;}
-.quiz-start-sub{font-size:14px;color:rgba(255,255,255,.6);margin-bottom:26px;font-weight:300;}
-.start-btn{background:var(--gold);color:var(--navy);border:none;padding:13px 32px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;letter-spacing:.02em;}
-.start-btn:hover{background:var(--gold-light);transform:translateY(-1px);}
-.quiz-progress-bar{height:4px;background:var(--border);border-radius:2px;margin-bottom:18px;}
-.quiz-progress-fill{height:100%;background:var(--navy);border-radius:2px;transition:width .4s ease;}
-.quiz-num{font-size:12px;color:var(--ink-faint);margin-bottom:10px;letter-spacing:.05em;text-transform:uppercase;}
-.quiz-q{font-family:'DM Serif Display',serif;font-size:20px;color:var(--navy);line-height:1.45;margin-bottom:20px;}
-.quiz-opt{display:block;width:100%;text-align:left;padding:12px 16px;border-radius:10px;border:1.5px solid var(--border);background:var(--white);color:var(--ink-mid);cursor:pointer;font-size:13px;margin-bottom:8px;font-family:'DM Sans',sans-serif;transition:all .15s;line-height:1.5;}
-.quiz-opt:hover:not(:disabled){border-color:var(--navy-mid);background:var(--blue-pale);color:var(--navy);}
-.quiz-opt.correct{background:var(--teal-pale);border-color:#1D9E75;color:var(--teal-dark);font-weight:500;}
-.quiz-opt.wrong{background:var(--coral-pale);border-color:#D85A30;color:var(--coral-dark);}
-.quiz-feedback{border-radius:10px;padding:13px 16px;font-size:13px;line-height:1.65;margin-top:9px;display:none;}
-.quiz-feedback.correct{background:var(--teal-pale);color:var(--teal-dark);border:1px solid rgba(29,158,117,.25);}
-.quiz-feedback.wrong{background:var(--coral-pale);color:var(--coral-dark);border:1px solid rgba(216,90,48,.25);}
-.next-btn{background:var(--navy);color:white;border:none;padding:10px 26px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:12px;transition:all .15s;float:right;}
-.next-btn:hover{background:var(--navy-light);}
-.score-display{font-family:'DM Serif Display',serif;font-size:60px;color:var(--gold);margin-bottom:7px;}
-/* scenarios */
-.scenario-card{background:var(--white);border:1px solid var(--border);border-radius:12px;margin-bottom:13px;overflow:hidden;border-left:4px solid transparent;}
-.scenario-card[data-type="fire"]{border-left-color:#D85A30;}
-.scenario-card[data-type="data"]{border-left-color:#1D9E75;}
-.scenario-card[data-type="brand"]{border-left-color:#7F77DD;}
-.scenario-card[data-type="qbr"]{border-left-color:#C9A84C;}
-.scenario-card[data-type="internal"]{border-left-color:#378ADD;}
-.scenario-card[data-type="client"]{border-left-color:#0F2545;}
-.scenario-card[data-type="revenue"]{border-left-color:#C9A84C;}
-.scenario-header{padding:15px 18px;cursor:pointer;display:flex;align-items:flex-start;justify-content:space-between;gap:11px;}
-.scenario-header:hover{background:var(--cream);}
-.scenario-left{flex:1;}
-.scenario-type-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;}
-.scenario-title{font-size:15px;font-weight:600;color:var(--navy);line-height:1.3;margin-bottom:3px;font-family:'DM Serif Display',serif;}
-.scenario-hook{font-size:13px;color:var(--ink-light);line-height:1.5;}
-.scenario-chevron{width:18px;height:18px;flex-shrink:0;color:var(--ink-faint);transition:transform .2s;margin-top:2px;}
-.scenario-card.open .scenario-chevron{transform:rotate(180deg);}
-.scenario-body{display:none;padding:0 18px 18px;border-top:1px solid var(--border);}
-.scenario-card.open .scenario-body{display:block;}
-.scenario-section{margin-top:14px;}
-.scenario-section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-faint);margin-bottom:7px;}
-.scenario-situation{background:var(--cream);border-radius:8px;padding:11px 15px;font-size:13px;color:var(--ink-mid);line-height:1.65;font-style:italic;border-left:3px solid var(--border);}
-.scenario-andrew{background:#F0EEFF;border-radius:8px;padding:11px 15px;font-size:13px;color:var(--purple-dark);line-height:1.65;}
-.scenario-action-list{list-style:none;padding:0;}
-.scenario-action-list li{font-size:13px;color:var(--ink-mid);line-height:1.6;padding:6px 0 6px 18px;position:relative;border-bottom:1px solid var(--border);}
-.scenario-action-list li:last-child{border-bottom:none;}
-.scenario-action-list li::before{content:'→';position:absolute;left:0;color:var(--navy-mid);font-weight:600;}
-.scenario-bridge{background:var(--blue-pale);border-radius:8px;padding:11px 15px;font-size:13px;color:var(--blue-dark);line-height:1.65;}
-.scenario-pitfall{background:#FFF4E5;border-radius:8px;padding:9px 13px;font-size:13px;color:#7A4500;line-height:1.6;border-left:3px solid #C9A84C;}
-/* story */
-.positioning-card{background:var(--navy);border-radius:14px;padding:26px 30px;margin-bottom:22px;position:relative;overflow:hidden;}
-.positioning-card::before{content:'"';font-family:'DM Serif Display',serif;font-size:110px;color:rgba(201,168,76,.13);position:absolute;top:-18px;left:14px;line-height:1;pointer-events:none;}
-.positioning-quote{font-family:'DM Serif Display',serif;font-size:16px;color:rgba(255,255,255,.85);line-height:1.7;font-style:italic;position:relative;z-index:1;}
-.positioning-attr{font-size:12px;color:rgba(255,255,255,.32);margin-top:12px;letter-spacing:.03em;}
-.story-block{border-left:3px solid var(--gold);padding-left:18px;margin-bottom:22px;}
-.story-theme{font-family:'DM Serif Display',serif;font-size:18px;color:var(--navy);margin-bottom:10px;}
-.story-point{font-size:13px;color:var(--ink-mid);line-height:1.7;padding:7px 13px;background:var(--cream);border-radius:8px;margin-bottom:7px;border-left:2px solid var(--border);}
-/* smart questions */
-.q-context-group{margin-bottom:26px;}
-.q-context-header{display:flex;align-items:center;gap:9px;margin-bottom:13px;padding-bottom:9px;border-bottom:1px solid var(--border);}
-.q-context-icon{width:30px;height:30px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.q-context-title{font-size:14px;font-weight:600;color:var(--navy);}
-.q-context-sub{font-size:12px;color:var(--ink-light);}
-.q-item{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:13px 16px;margin-bottom:7px;cursor:pointer;transition:all .15s;}
-.q-item:hover{border-color:var(--navy-mid);box-shadow:0 2px 9px rgba(0,0,0,.06);}
-.q-context-tag{font-size:11px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;}
-.q-text{font-size:14px;color:var(--ink);line-height:1.6;font-style:italic;}
-.q-copied{font-size:11px;color:var(--teal-dark);background:var(--teal-pale);padding:2px 8px;border-radius:10px;display:none;margin-top:5px;}
-/* checklist */
-.check-item{display:flex;align-items:flex-start;gap:13px;padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer;}
-.check-item:last-child{border-bottom:none;}
-.check-item:hover .check-circle{border-color:var(--navy);}
-.check-circle{width:21px;height:21px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .2s;background:var(--white);}
-.check-circle.done{background:var(--navy);border-color:var(--navy);}
-.check-check{display:none;}
-.check-circle.done .check-check{display:block;}
-.check-content{flex:1;}
-.check-title{font-size:14px;font-weight:500;color:var(--ink);margin-bottom:2px;}
-.check-title.done{color:var(--ink-faint);text-decoration:line-through;}
-.check-detail{font-size:13px;color:var(--ink-light);line-height:1.5;}
-.check-detail.done{color:var(--ink-faint);}
-.reset-btn{padding:8px 18px;border-radius:8px;border:1px solid var(--border);background:var(--white);color:var(--ink-light);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:14px;transition:all .15s;}
-.reset-btn:hover{border-color:var(--navy);color:var(--navy);}
-/* NEW SECTIONS */
-/* statement reader */
-.statement-wrap{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px;}
-.statement-header{background:var(--navy);padding:16px 22px;display:flex;align-items:center;justify-content:space-between;}
-.statement-header-title{font-family:'DM Serif Display',serif;font-size:18px;color:var(--gold-light);}
-.statement-header-sub{font-size:12px;color:rgba(255,255,255,.5);}
-.statement-table{width:100%;border-collapse:collapse;font-size:13px;}
-.statement-table th{background:var(--blue-pale);color:var(--blue-dark);font-weight:600;padding:9px 14px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;}
-.statement-table td{padding:10px 14px;border-bottom:1px solid var(--border);line-height:1.5;}
-.statement-table tr:last-child td{border-bottom:none;}
-.statement-table .row-highlight{background:#FFFBEA;}
-.statement-table .row-alert{background:#FFF0EE;}
-.statement-table .row-good{background:#F0FBF5;}
-.clickable-row{cursor:pointer;}
-.clickable-row:hover td{background:var(--blue-pale)!important;}
-.annotation-box{background:var(--amber-pale);border:1px solid var(--border-gold);border-radius:10px;padding:14px 18px;margin:8px 14px 14px;display:none;animation:fadeIn .2s;font-size:13px;line-height:1.65;color:var(--amber-dark);}
-.annotation-box.visible{display:block;}
-.ann-title{font-weight:600;color:var(--navy);margin-bottom:5px;font-size:14px;}
-/* day in life */
-.timeline{position:relative;padding-left:28px;}
-.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:var(--border);}
-.timeline-item{position:relative;margin-bottom:20px;}
-.timeline-dot{position:absolute;left:-24px;width:14px;height:14px;border-radius:50%;background:var(--white);border:2px solid var(--navy-mid);top:3px;}
-.timeline-item.fire .timeline-dot{background:var(--coral-pale);border-color:#D85A30;}
-.timeline-item.data .timeline-dot{background:var(--teal-pale);border-color:#1D9E75;}
-.timeline-item.client .timeline-dot{background:var(--blue-pale);border-color:#378ADD;}
-.timeline-item.admin .timeline-dot{background:var(--amber-pale);border-color:#C9A84C;}
-.timeline-time{font-size:11px;font-weight:600;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;}
-.timeline-title{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:4px;}
-.timeline-detail{font-size:13px;color:var(--ink-mid);line-height:1.6;}
-.timeline-andrew{font-size:12px;color:var(--purple-dark);background:var(--purple-pale);border-radius:6px;padding:5px 10px;margin-top:6px;display:inline-block;font-style:italic;}
-/* banker triangle */
-.triangle-wrap{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px;}
-.triangle-node{border-radius:12px;padding:16px;text-align:center;}
-.triangle-node-title{font-weight:600;font-size:14px;margin-bottom:6px;}
-.triangle-node-owns{font-size:12px;line-height:1.6;color:var(--ink-mid);}
-.triangle-arrows{background:var(--cream);border-radius:10px;padding:14px 18px;margin-bottom:14px;}
-.triangle-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--ink-mid);line-height:1.6;}
-.triangle-row:last-child{border-bottom:none;}
-.triangle-row-label{font-weight:600;color:var(--navy);min-width:160px;flex-shrink:0;}
-/* insurance */
-.ins-stat{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-align:center;}
-.ins-stat-num{font-family:'DM Serif Display',serif;font-size:28px;color:var(--navy);margin-bottom:3px;}
-.ins-stat-label{font-size:12px;color:var(--ink-light);}
-/* salesforce */
-.sf-stage{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);}
-.sf-stage:last-child{border-bottom:none;}
-.sf-bubble{width:28px;height:28px;border-radius:50%;background:var(--navy);color:var(--gold-light);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
-.sf-stage-content{flex:1;}
-.sf-stage-name{font-weight:600;color:var(--navy);font-size:14px;margin-bottom:3px;}
-.sf-stage-detail{font-size:13px;color:var(--ink-mid);line-height:1.6;}
-/* glossary */
-.glossary-list{columns:2;column-gap:20px;}
-.glossary-item{break-inside:avoid;margin-bottom:12px;}
-.glossary-term{font-weight:600;color:var(--navy);font-size:14px;margin-bottom:2px;}
-.glossary-def{font-size:13px;color:var(--ink-mid);line-height:1.55;}
-/* payment explorer */
-.pe-metric{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px;}
-.pe-metric-name{font-weight:600;color:var(--navy);font-size:14px;margin-bottom:4px;}
-.pe-metric-def{font-size:13px;color:var(--ink-mid);line-height:1.6;margin-bottom:7px;}
-.pe-metric-action{font-size:13px;color:var(--blue-dark);background:var(--blue-pale);border-radius:6px;padding:7px 12px;font-style:italic;}
-/* interchange */
-.ic-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:14px;}
-.ic-table th{background:var(--navy);color:rgba(255,255,255,.75);font-weight:500;padding:9px 13px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;}
-.ic-table td{padding:9px 13px;border-bottom:1px solid var(--border);}
-.ic-table tr:last-child td{border-bottom:none;}
-.ic-table tr:nth-child(even) td{background:var(--cream);}
-.ic-table td:first-child{font-weight:500;color:var(--navy-light);}
-.ic-highlight{color:var(--teal-dark);font-weight:600;}
-.ic-alert{color:var(--coral-dark);font-weight:600;}
-/* mobile */
-.mobile-menu-btn{display:none;position:fixed;top:12px;left:12px;z-index:200;background:var(--navy);color:white;border:none;border-radius:8px;width:34px;height:34px;cursor:pointer;font-size:19px;align-items:center;justify-content:center;}
-@media(max-width:768px){
-  .sidebar{transform:translateX(-100%);transition:transform .25s;}
-  .sidebar.open{transform:translateX(0);}
-  .main{margin-left:0;}
-  .mobile-menu-btn{display:flex;}
-  .content{padding:18px 14px;}
-  .topbar{padding:11px 14px 11px 52px;}
-  .grid-2,.grid-3,.triangle-wrap,.eco-flow{grid-template-columns:1fr;}
-  .glossary-list{columns:1;}
-  .quiz-start-card{padding:28px 18px;}
-  .positioning-card{padding:18px;}
-}
-.hidden{display:none!important;}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Georgia', serif;
+    background: #F8F7F4;
+    color: #0F172A;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: #0A2540;
+    padding: 28px 32px 24px;
+  }
+  .header-inner {
+    max-width: 880px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .header-eyebrow {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: #94A3B8;
+    font-family: sans-serif;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .header-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #FFFFFF;
+    letter-spacing: -0.5px;
+  }
+  .header-sub {
+    font-size: 15px;
+    color: #7DD3FC;
+    margin-top: 4px;
+    font-style: italic;
+  }
+  .header-badge {
+    background: #132F4C;
+    border-radius: 10px;
+    padding: 10px 16px;
+    text-align: right;
+  }
+  .header-badge-label {
+    font-size: 11px;
+    color: #94A3B8;
+    font-family: sans-serif;
+    margin-bottom: 2px;
+  }
+  .header-badge-text {
+    font-size: 12px;
+    color: #BAE6FD;
+    max-width: 260px;
+    line-height: 1.5;
+    font-family: sans-serif;
+  }
+
+  /* SCENARIO NAV */
+  .scenario-nav {
+    background: #0F3460;
+    border-bottom: 1px solid #1E4976;
+    overflow-x: auto;
+  }
+  .scenario-nav-inner {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0 32px;
+    display: flex;
+    gap: 2px;
+  }
+  .nav-btn {
+    padding: 12px 16px;
+    background: transparent;
+    color: #94A3B8;
+    border: none;
+    border-top: 3px solid transparent;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: sans-serif;
+    font-weight: 400;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .nav-btn:hover { color: #FFFFFF; }
+  .nav-btn.active {
+    background: #FFFFFF;
+    color: #0A2540;
+    border-top-color: #2563EB;
+    font-weight: 600;
+  }
+
+  /* MAIN */
+  .main {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 28px 32px;
+  }
+
+  /* SCENARIO CARD */
+  .scenario-card {
+    background: #FFFFFF;
+    border-radius: 14px;
+    border: 1px solid #E2E8F0;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .sc-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #F1F5F9;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .sc-icon { font-size: 32px; flex-shrink: 0; }
+  .sc-meta { flex: 1; }
+  .sc-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #0F172A;
+    letter-spacing: -0.3px;
+    margin-bottom: 4px;
+  }
+  .sc-subtitle { font-size: 13px; color: #64748B; font-family: sans-serif; }
+  .complexity-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+  .complexity-label { font-size: 10px; color: #94A3B8; font-family: sans-serif; letter-spacing: 1px; text-transform: uppercase; }
+  .complexity-pips { display: flex; gap: 3px; }
+  .pip { width: 20px; height: 6px; border-radius: 3px; background: #E2E8F0; }
+  .pip.filled { background: #2563EB; }
+
+  .sc-quote {
+    padding: 16px 24px;
+    background: #F8FAFC;
+    border-bottom: 1px solid #F1F5F9;
+  }
+  .sc-quote-label {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: #94A3B8;
+    font-family: sans-serif;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .sc-quote-text {
+    font-size: 15px;
+    color: #1E3A5F;
+    font-style: italic;
+    border-left: 3px solid #2563EB;
+    padding-left: 14px;
+    line-height: 1.6;
+    font-family: sans-serif;
+  }
+
+  .sc-problem { padding: 16px 24px; }
+  .sc-problem-label {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: #94A3B8;
+    font-family: sans-serif;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .sc-problem-text {
+    font-size: 14px;
+    color: #374151;
+    line-height: 1.7;
+    font-family: sans-serif;
+  }
+
+  /* TABS */
+  .tabs { display: flex; gap: 4px; margin-bottom: 16px; flex-wrap: wrap; }
+  .tab-btn {
+    padding: 9px 18px;
+    border-radius: 8px;
+    border: 1px solid #E2E8F0;
+    background: #FFFFFF;
+    color: #64748B;
+    font-size: 13px;
+    font-family: sans-serif;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .tab-btn:hover { background: #F8FAFC; }
+  .tab-btn.active {
+    border: 1.5px solid #2563EB;
+    background: #EFF6FF;
+    color: #1D4ED8;
+    font-weight: 600;
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: flex; flex-direction: column; gap: 12px; }
+
+  /* STEPS */
+  .step-item {
+    background: #FFFFFF;
+    border-radius: 12px;
+    border: 1px solid #E2E8F0;
+    padding: 16px 20px;
+    display: flex;
+    gap: 14px;
+  }
+  .step-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: #EFF6FF;
+    color: #1D4ED8;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-content { flex: 1; }
+  .step-title { font-size: 14px; font-weight: 600; color: #0F172A; margin-bottom: 4px; font-family: sans-serif; }
+  .step-desc { font-size: 13px; color: #475569; line-height: 1.65; font-family: sans-serif; margin-bottom: 10px; }
+  .step-terms { display: flex; flex-wrap: wrap; gap: 5px; }
+  .term-pill {
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-family: sans-serif;
+    font-weight: 500;
+  }
+  .term-0 { background: #EDE9FE; color: #4C1D95; border: 1px solid #C4B5FD; }
+  .term-1 { background: #FEF3C7; color: #78350F; border: 1px solid #FCD34D; }
+  .term-2 { background: #D1FAE5; color: #064E3B; border: 1px solid #6EE7B7; }
+  .term-3 { background: #FEE2E2; color: #7F1D1D; border: 1px solid #FCA5A5; }
+
+  /* INTERVIEW LANGUAGE */
+  .phrase-card {
+    background: #F0FDF4;
+    border: 1px solid #86EFAC;
+    border-radius: 12px;
+    padding: 16px 20px;
+  }
+  .phrase-label {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: #166534;
+    font-family: sans-serif;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .phrase-text {
+    font-size: 14px;
+    color: #14532D;
+    line-height: 1.7;
+    font-family: sans-serif;
+    font-style: italic;
+  }
+
+  .vp-bridge {
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    gap: 12px;
+  }
+  .vp-bridge-icon { font-size: 20px; flex-shrink: 0; }
+  .vp-bridge-label {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: #1D4ED8;
+    font-family: sans-serif;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .vp-bridge-text {
+    font-size: 13px;
+    color: #1E40AF;
+    line-height: 1.7;
+    font-family: sans-serif;
+  }
+
+  /* TRAPS */
+  .trap-card {
+    background: #FFF7ED;
+    border: 1px solid #FED7AA;
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    gap: 12px;
+  }
+  .trap-icon { font-size: 20px; flex-shrink: 0; }
+  .trap-label {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: #9A3412;
+    font-family: sans-serif;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .trap-text { font-size: 13px; color: #7C2D12; line-height: 1.65; font-family: sans-serif; }
+
+  .reframe-card {
+    background: #FFF1F2;
+    border: 1px solid #FECDD3;
+    border-radius: 12px;
+    padding: 18px 20px;
+  }
+  .reframe-label {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: #9F1239;
+    font-family: sans-serif;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .reframe-weak {
+    background: #FFE4E6;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 10px;
+  }
+  .reframe-weak-label { font-size: 11px; color: #9F1239; font-family: sans-serif; font-weight: 600; margin-bottom: 4px; }
+  .reframe-weak-text { font-size: 13px; color: #881337; font-family: sans-serif; font-style: italic; }
+  .reframe-strong {
+    background: #D1FAE5;
+    border-radius: 8px;
+    padding: 10px 14px;
+  }
+  .reframe-strong-label { font-size: 11px; color: #065F46; font-family: sans-serif; font-weight: 600; margin-bottom: 4px; }
+  .reframe-strong-text { font-size: 13px; color: #064E3B; font-family: sans-serif; font-style: italic; }
+
+  /* FOOTER NAV */
+  .footer-nav {
+    margin-top: 28px;
+    padding: 16px 0;
+    border-top: 1px solid #E2E8F0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-count { font-size: 12px; color: #94A3B8; font-family: sans-serif; }
+  .footer-btns { display: flex; gap: 8px; }
+  .footer-btn {
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: 1px solid #E2E8F0;
+    background: #FFFFFF;
+    color: #374151;
+    font-size: 13px;
+    font-family: sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .footer-btn:hover { background: #F1F5F9; }
+  .footer-btn.primary { background: #0A2540; color: #FFFFFF; border-color: #0A2540; }
+  .footer-btn.primary:hover { background: #0F3460; }
+  .footer-btn:disabled { opacity: 0.35; cursor: default; }
+
+  @media (max-width: 600px) {
+    .header, .main { padding: 20px 16px; }
+    .scenario-nav-inner { padding: 0 16px; }
+    .sc-header { flex-direction: column; }
+    .complexity-wrap { align-items: flex-start; }
+  }
 </style>
 </head>
 <body>
-<button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="Menu">☰</button>
-<div class="app">
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-brand">
-    <div class="sidebar-logo">Merchant Services<br>Field Guide</div>
-    <div class="sidebar-sub">JPMorgan Chase · RM Payments VP</div>
-  </div>
-  <nav class="sidebar-nav">
-    <div class="nav-group-label">Study</div>
-    <button class="nav-item active" onclick="showView('ecosystem',this)"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>Ecosystem</button>
-    <button class="nav-item" onclick="showView('concepts',this)"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>Core concepts</button>
-    <button class="nav-item" onclick="showView('flashcards',this)"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M16 2H8a1 1 0 00-1 1v3h10V3a1 1 0 00-1-1z"/></svg>Flashcards</button>
-    <button class="nav-item" onclick="showView('interchange',this)"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 7h6m-6 4h6m-6 4h4M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"/></svg>Interchange tables</button>
-    <button class="nav-item" onclick="showView('explorer',this)"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-4 4"/></svg>Payment Explorer</button>
-    <button class="nav-item" onclick="showView('statement',this)"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>Statement reader</button>
-    <button class="nav-item" onclick="showView('quiz',this)"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Quiz</button>
-    <div class="nav-group-label" style="margin-top:8px;">Prepare</div>
-    <button class="nav-item" onclick="showView('scenarios',this)"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7"/></svg>BRM Scenarios</button>
-    <button class="nav-item" onclick="showView('daylife',this)"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Day in the life</button>
-    <button class="nav-item" onclick="showView('banker',this)"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Banker triangle</button>
-    <button class="nav-item" onclick="showView('insurance',this)"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Insurance vertical</button>
-    <button class="nav-item" onclick="showView('salesforce',this)"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Salesforce workflow</button>
-    <button class="nav-item" onclick="showView('story',this)"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Your story</button>
-    <button class="nav-item" onclick="showView('questions',this)"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.42-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>Smart questions</button>
-    <button class="nav-item" onclick="showView('glossary',this)"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>JPM Glossary</button>
-    <button class="nav-item" onclick="showView('checklist',this)"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Pre-meeting</button>
-    <div class="nav-group-label" style="margin-top:8px;">Media</div>
-    <button class="nav-item" onclick="showView('audio',this)"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg>Audio / Video</button>
-  </nav>
-  <div class="sidebar-footer"><strong>Dr. Gerald Mitchell</strong>DrGeraldMitchell@gmail.com</div>
-</aside>
-<main class="main">
-  <div class="topbar">
-    <div class="topbar-title" id="topbar-title">Payments Ecosystem</div>
-    <div class="topbar-badge">JPMorgan Chase — RM Interview Prep</div>
-  </div>
-  <div class="content">
 
-<!-- ECOSYSTEM -->
-<div id="view-ecosystem" class="view active">
-  <div class="view-title">The payments ecosystem</div>
-  <div class="view-subtitle">Where JPMorgan sits — and why it matters in every client conversation</div>
-  <div class="eco-flow">
-    <div class="eco-node" style="background:#EBF1FA;border-color:rgba(27,58,107,.15);" onclick="showEcoDetail('cardholder')"><div class="eco-title" style="color:#0C3D7A;">Cardholder</div><div class="eco-sub" style="color:#378ADD;">Customer making the purchase</div><div class="eco-badge" style="background:#378ADD;color:white;">tap for detail</div></div>
-    <div class="eco-node" style="background:#F0EEFF;border-color:rgba(127,119,221,.2);" onclick="showEcoDetail('issuer')"><div class="eco-title" style="color:#3D2B8C;">Issuing bank</div><div class="eco-sub" style="color:#7F77DD;">Customer's bank. Approves & declines.</div><div class="eco-badge" style="background:#7F77DD;color:white;">tap for detail</div></div>
-    <div class="eco-node" style="background:#F1EFE8;border-color:rgba(136,135,128,.2);" onclick="showEcoDetail('network')"><div class="eco-title" style="color:#444441;">Card network</div><div class="eco-sub" style="color:#5F5E5A;">Visa/MC/Amex. Sets the rules.</div><div class="eco-badge" style="background:#888780;color:white;">tap for detail</div></div>
-    <div class="eco-node highlight" onclick="showEcoDetail('jpmorgan')"><div class="eco-title">JPMorgan ★</div><div class="eco-sub" style="color:rgba(255,255,255,.75);">Acquiring bank + processor</div><div class="eco-badge">Your role</div></div>
-    <div class="eco-node" style="background:#FDEEE9;border-color:rgba(216,90,48,.2);" onclick="showEcoDetail('merchant')"><div class="eco-title" style="color:#7A2510;">Merchant</div><div class="eco-sub" style="color:#D85A30;">Your Middle Market client</div><div class="eco-badge" style="background:#D85A30;color:white;">tap for detail</div></div>
-  </div>
-  <div class="eco-arrows">Transaction flows: <span>Cardholder</span> → <span>Issuer</span> → <span>Network</span> → <span style="color:var(--gold);font-weight:600;">JPMorgan (acquirer)</span> → <span>Merchant funds settled</span></div>
-  <div id="eco-detail-box" class="eco-detail"></div>
-  <div class="section-rule"></div>
-  <div class="section-label">JPMorgan's competitive position</div>
-  <div class="grid-2">
-    <div class="card"><div class="tag tag-blue" style="margin-bottom:10px;">Why clients choose JPMorgan</div><div style="font-size:13px;color:var(--ink-mid);line-height:1.8;">✦ Scale — billions of transactions, enterprise-grade uptime<br>✦ Full-bank integration — treasury, FX, commercial banking<br>✦ Data & analytics at scale — payment intelligence<br>✦ Security — fraud tools, tokenization, 3DS support<br>✦ Relationship model — dedicated RM, not a call center</div></div>
-    <div class="card"><div class="tag tag-coral" style="margin-bottom:10px;">Competitive landscape</div><table class="comp-table"><thead><tr><th>Competitor</th><th>Know this</th></tr></thead><tbody><tr><td>Fiserv/First Data</td><td>Largest mid-market incumbent; often displaced</td></tr><tr><td>Worldpay (FIS)</td><td>Global scale, strong e-commerce</td></tr><tr><td>Stripe</td><td>Tech-first, growing upmarket; differentiate on relationship + bank depth</td></tr><tr><td>Square/Block</td><td>SMB-focused; less relevant for Middle Market</td></tr></tbody></table></div>
-  </div>
-</div>
-
-<!-- CONCEPTS -->
-<div id="view-concepts" class="view">
-  <div class="view-title">Core concepts</div>
-  <div class="view-subtitle">19 terms — know these cold, with your bridge back to your experience</div>
-  <div class="filter-row">
-    <button class="filter-btn active" onclick="filterConcepts('all',this)">All (19)</button>
-    <button class="filter-btn" onclick="filterConcepts('pricing',this)">Pricing & economics</button>
-    <button class="filter-btn" onclick="filterConcepts('performance',this)">Transaction performance</button>
-    <button class="filter-btn" onclick="filterConcepts('environment',this)">Environment</button>
-    <button class="filter-btn" onclick="filterConcepts('compliance',this)">Compliance</button>
-    <button class="filter-btn" onclick="filterConcepts('client',this)">Client management</button>
-  </div>
-  <div id="concepts-list"></div>
-</div>
-
-<!-- FLASHCARDS -->
-<div id="view-flashcards" class="view">
-  <div class="view-title">Flashcards</div>
-  <div class="view-subtitle">Tap the card to reveal the definition</div>
-  <div class="fc-progress"><div class="fc-progress-fill" id="fc-bar"></div></div>
-  <div class="fc-wrap" id="fc-wrap" onclick="flipFC()">
-    <div class="fc-inner">
-      <div class="fc-front"><div class="fc-cat-label" id="fc-cat"></div><div class="fc-term-text" id="fc-term"></div><div class="fc-hint-text">tap to reveal</div></div>
-      <div class="fc-back"><div class="fc-def-text" id="fc-def"></div><div class="fc-back-cat" id="fc-back-cat"></div></div>
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div>
+      <div class="header-eyebrow">JPMorgan Chase · Interview Prep</div>
+      <div class="header-title">Merchant Services BRM</div>
+      <div class="header-sub">Scenario Field Simulator</div>
+    </div>
+    <div class="header-badge">
+      <div class="header-badge-label">Value Proposition</div>
+      <div class="header-badge-text">Consultative · Systems-oriented · Cross-functional leader</div>
     </div>
   </div>
-  <div class="fc-controls">
-    <button class="fc-btn" onclick="fcNav(-1)">← Previous</button>
-    <span class="fc-counter" id="fc-counter"></span>
-    <button class="fc-btn" onclick="fcNav(1)">Next →</button>
-  </div>
-  <div class="card" style="margin-top:8px;"><div class="section-label" style="margin-bottom:7px;">Your bridge for this concept</div><div id="fc-bridge" style="background:var(--blue-pale);color:var(--blue-dark);border-radius:8px;padding:11px 15px;font-size:13px;line-height:1.65;"></div></div>
-  <button class="fc-shuffle-btn" onclick="shuffleFC()">⟳ Shuffle cards</button>
 </div>
 
-<!-- INTERCHANGE TABLES -->
-<div id="view-interchange" class="view">
-  <div class="view-title">Interchange tables</div>
-  <div class="view-subtitle">How to read a rate schedule and calculate client dollar impact — the skill Andrew said even experienced RMs find challenging</div>
-  <div class="card" style="background:var(--navy);border-color:var(--navy);margin-bottom:18px;">
-    <div style="font-size:13px;color:rgba(255,255,255,.8);line-height:1.7;">Andrew said: <em style="color:var(--gold-light);">"Twice a year Visa and Mastercard release updates — interchange increases, criteria changes to fees. Every year it's different and we're all picking up the pieces."</em> Reading these tables and translating them into client dollar impact is a core RM skill.</div>
-  </div>
-  <div class="section-label">How interchange rates work</div>
-  <div class="card">
-    <div style="font-size:14px;color:var(--ink-mid);line-height:1.7;margin-bottom:12px;">Interchange rates are expressed as a <strong style="color:var(--navy);">percentage + flat fee</strong> per transaction. The rate that applies depends on: (1) card type, (2) how the transaction was processed, and (3) what data was submitted with it.</div>
-    <div style="font-size:13px;color:var(--ink-mid);line-height:1.7;"><strong style="color:var(--navy);">Formula:</strong> Interchange cost = (Transaction amount × rate%) + flat fee per transaction<br><br><strong style="color:var(--navy);">Example:</strong> A $500 CNP transaction at 1.80% + $0.10 = ($500 × 0.018) + $0.10 = $9.00 + $0.10 = <strong>$9.10 interchange cost</strong></div>
-  </div>
-  <div class="section-label">Sample Visa interchange schedule (representative — not current official rates)</div>
-  <table class="ic-table">
-    <thead><tr><th>Card type</th><th>Transaction type</th><th>Data required</th><th>Rate</th><th>Flat fee</th><th>On $500 txn</th></tr></thead>
-    <tbody>
-      <tr><td>Consumer credit</td><td>Card-present (retail)</td><td>Standard</td><td class="ic-highlight">1.43%</td><td>$0.05</td><td class="ic-highlight">$7.20</td></tr>
-      <tr><td>Consumer credit</td><td>Card-not-present (e-commerce)</td><td>Standard</td><td class="ic-alert">1.80%</td><td>$0.10</td><td class="ic-alert">$9.10</td></tr>
-      <tr><td>Rewards credit</td><td>Card-not-present</td><td>Standard</td><td class="ic-alert">2.10%</td><td>$0.10</td><td class="ic-alert">$10.60</td></tr>
-      <tr><td>Commercial/corporate</td><td>Card-not-present</td><td>Level 2 data</td><td class="ic-highlight">2.05%</td><td>$0.10</td><td class="ic-highlight">$10.35</td></tr>
-      <tr><td>Commercial/corporate</td><td>Card-not-present</td><td>Level 3 data</td><td class="ic-highlight">1.45%</td><td>$0.10</td><td class="ic-highlight">$7.35</td></tr>
-      <tr><td>Debit (regulated)</td><td>Card-present</td><td>Standard</td><td class="ic-highlight">0.05%</td><td>$0.22</td><td class="ic-highlight">$0.47</td></tr>
-    </tbody>
-  </table>
-  <div class="card" style="background:var(--teal-pale);border-color:rgba(29,158,117,.2);margin-bottom:14px;">
-    <div style="font-weight:600;color:var(--teal-dark);margin-bottom:6px;font-size:14px;">Key insight: Level 2/3 data optimization</div>
-    <div style="font-size:13px;color:var(--teal-dark);line-height:1.7;">On the commercial card row above, submitting <strong>Level 3 data</strong> (itemized line items, freight, tax, PO number) instead of Level 2 drops the rate from 2.05% to 1.45% — a <strong>0.60% savings</strong>. On a client processing $10M/month in B2B commercial cards, that's <strong>$60,000/month</strong> in recovered cost. This is exactly the "avoidable fee" conversation Andrew described in Payment Explorer.</div>
-  </div>
-  <div class="section-label">Brand release impact calculator — worked example</div>
-  <div class="card">
-    <div style="font-size:14px;font-weight:500;color:var(--navy);margin-bottom:10px;">Scenario: Visa April release increases CNP consumer credit rate by 10 bps (0.10%)</div>
-    <div style="font-size:13px;color:var(--ink-mid);line-height:1.8;">
-      Client monthly CNP volume: <strong>$8,000,000</strong><br>
-      Rate increase: <strong>0.10%</strong> (10 basis points)<br>
-      Monthly cost increase: $8,000,000 × 0.001 = <strong style="color:var(--coral-dark);">$8,000/month</strong><br>
-      Annual cost increase: <strong style="color:var(--coral-dark);">$96,000/year</strong><br><br>
-      <span style="color:var(--navy-mid);font-style:italic;">This is the number you bring to the client proactively, before they see it on their statement. That conversation — showing up with the math — is the QBR moment Andrew described.</span>
-    </div>
-  </div>
-  <div class="section-label">Level 2 vs Level 3 data — what's the difference?</div>
-  <table class="ic-table">
-    <thead><tr><th>Data level</th><th>What's included</th><th>Who benefits</th></tr></thead>
-    <tbody>
-      <tr><td>Standard (Level 1)</td><td>Transaction amount, merchant name, date</td><td>All merchants (baseline)</td></tr>
-      <tr><td>Level 2</td><td>+ Customer code, tax amount, merchant postal code</td><td>B2B merchants with commercial cards</td></tr>
-      <tr><td>Level 3</td><td>+ Line-item detail: product codes, quantities, unit prices, freight, duty</td><td>B2B with high commercial card volume — biggest savings</td></tr>
-    </tbody>
-  </table>
+<!-- SCENARIO NAV -->
+<div class="scenario-nav">
+  <div class="scenario-nav-inner" id="nav"></div>
 </div>
 
-<!-- PAYMENT EXPLORER -->
-<div id="view-explorer" class="view">
-  <div class="view-title">Payment Explorer</div>
-  <div class="view-subtitle">The monthly analytics tool Andrew uses to proactively identify opportunities and issues for every client</div>
-  <div class="card" style="background:var(--navy);border-color:var(--navy);margin-bottom:18px;">
-    <div style="font-size:13px;color:rgba(255,255,255,.8);line-height:1.7;">Andrew said: <em style="color:var(--gold-light);">"I go into Payment Explorer once a month. I look at authorization rates — can they be better? Fees they're getting that are avoidable? If I see something I always reach out to my clients proactively. That's how you show value."</em></div>
-  </div>
-  <div class="section-label">What you're looking for — the 5 key metrics</div>
-  <div class="pe-metric">
-    <div class="pe-metric-name">Authorization rate</div>
-    <div class="pe-metric-def">Percentage of attempted transactions approved. Benchmark: industry average is typically 85-90% for CNP, higher for CP. A drop of 1-2% month-over-month is a red flag worth a client call.</div>
-    <div class="pe-metric-action">→ If below benchmark or trending down: "I was reviewing your account and noticed your auth rate dropped from 87% to 85% last month. Let's talk about what might be driving that and what we can do."</div>
-  </div>
-  <div class="pe-metric">
-    <div class="pe-metric-name">Decline rate breakdown</div>
-    <div class="pe-metric-def">Hard declines (do not retry — invalid card, stolen) vs. soft declines (retry is possible — insufficient funds, temporary hold, velocity limit). High soft decline rates often indicate retry logic issues or authorization strategy problems.</div>
-    <div class="pe-metric-action">→ If soft declines are high: coordinate with technical team about retry optimization. A good retry strategy can recover 20-40% of soft-declined transactions.</div>
-  </div>
-  <div class="pe-metric">
-    <div class="pe-metric-name">Avoidable fees</div>
-    <div class="pe-metric-def">Fees the client is paying that could be reduced or eliminated through data submission changes or processing adjustments. Level 2/3 data gaps, misrouted transactions, and incorrect MCC codes are common culprits.</div>
-    <div class="pe-metric-action">→ Quantify before you call. "This fee pattern is costing you approximately $X/month — here's what's causing it and how we fix it."</div>
-  </div>
-  <div class="pe-metric">
-    <div class="pe-metric-name">Chargeback ratio trend</div>
-    <div class="pe-metric-def">Percentage of transactions resulting in chargebacks, tracked month over month. Visa's threshold is 1.0%; exceeding it triggers the Visa Dispute Monitoring Program (VDMP). Early warning is critical.</div>
-    <div class="pe-metric-action">→ If trending toward 0.7-0.8%: alert the client now, before they breach. "You're at 0.75% and the network threshold is 1%. Let's get ahead of this."</div>
-  </div>
-  <div class="pe-metric">
-    <div class="pe-metric-name">Volume and mix trends</div>
-    <div class="pe-metric-def">Changes in overall processing volume, card type mix (credit vs. debit, consumer vs. commercial), and CP vs. CNP split. Shifts in mix affect pricing — a client moving more volume to CNP rewards cards will see cost increases.</div>
-    <div class="pe-metric-action">→ Use volume trends to frame the revenue opportunity conversation: "Your volume is up 12% YoY — let's talk about whether your current pricing structure is still optimized for your mix."</div>
-  </div>
-  <div class="section-label">Your monthly Payment Explorer workflow</div>
-  <div class="card">
-    <div class="timeline" style="padding-left:24px;">
-      <div class="timeline-item data" style="margin-bottom:16px;">
-        <div class="timeline-dot"></div>
-        <div class="timeline-time">Week 1 of month</div>
-        <div class="timeline-title">Pull all client reports</div>
-        <div class="timeline-detail">Log into Payment Explorer, run reports for each client in your book. Export auth rate, decline breakdown, fee analysis, and chargeback ratio.</div>
+<!-- MAIN -->
+<div class="main">
+
+  <!-- Scenario Card -->
+  <div class="scenario-card">
+    <div class="sc-header">
+      <div class="sc-icon" id="sc-icon"></div>
+      <div class="sc-meta">
+        <div class="sc-title" id="sc-title"></div>
+        <div class="sc-subtitle" id="sc-subtitle"></div>
       </div>
-      <div class="timeline-item data" style="margin-bottom:16px;">
-        <div class="timeline-dot"></div>
-        <div class="timeline-time">Review session</div>
-        <div class="timeline-title">Identify anomalies</div>
-        <div class="timeline-detail">Compare to prior month. Flag: any metric moving more than 1-2% in wrong direction, any avoidable fee pattern, any chargeback trend above 0.5%.</div>
-      </div>
-      <div class="timeline-item client" style="margin-bottom:16px;">
-        <div class="timeline-dot"></div>
-        <div class="timeline-time">Outreach</div>
-        <div class="timeline-title">Proactive client contact</div>
-        <div class="timeline-detail">For any flagged item: reach out before the client notices. Lead with the insight and the recommendation, not just the problem.</div>
-      </div>
-      <div class="timeline-item admin">
-        <div class="timeline-dot"></div>
-        <div class="timeline-time">Documentation</div>
-        <div class="timeline-title">Log in open items + Salesforce</div>
-        <div class="timeline-detail">Add findings to client's open items Excel. Log any revenue opportunity formally in Salesforce. Update client record.</div>
+      <div class="complexity-wrap">
+        <div class="complexity-label">Complexity</div>
+        <div class="complexity-pips" id="complexity-pips"></div>
       </div>
     </div>
-  </div>
-</div>
-
-<!-- STATEMENT READER -->
-<div id="view-statement" class="view">
-  <div class="view-title">Statement reader</div>
-  <div class="view-subtitle">How to read a merchant processing statement — click any line to understand it. This is what your clients see every month.</div>
-  <div class="statement-wrap">
-    <div class="statement-header">
-      <div><div class="statement-header-title">Acme Insurance Co. — Processing Statement</div><div class="statement-header-sub">May 2025 · MID: 4821-XXXX · Processed by JPMorgan Merchant Services</div></div>
+    <div class="sc-quote">
+      <div class="sc-quote-label">Client says</div>
+      <div class="sc-quote-text" id="sc-quote"></div>
     </div>
-    <table class="statement-table">
-      <thead><tr><th>Line item</th><th>Description</th><th>Volume/Count</th><th>Rate</th><th>Amount</th></tr></thead>
-      <tbody>
-        <tr class="clickable-row row-highlight" onclick="showAnnotation('volume')"><td>Total processing volume</td><td>All card transactions settled</td><td>$4,200,000</td><td>—</td><td>—</td></tr>
-        <div id="ann-volume" class="annotation-box"><div class="ann-title">Total processing volume</div>This is your client's total card transaction volume for the month. At $4.2M, this is a meaningful Middle Market account. Watch this number month-over-month — significant drops could indicate a client moving volume to a competitor or a processing issue.</div>
-        <tr class="clickable-row" onclick="showAnnotation('interchange')"><td>Interchange fees</td><td>Fees passed to card-issuing banks (Visa/MC schedule)</td><td>—</td><td>Blended 1.72%</td><td class="ic-alert">$72,240</td></tr>
-        <div id="ann-interchange" class="annotation-box"><div class="ann-title">Interchange fees</div>This is the largest line item on most statements — money that flows from JPMorgan to the cardholder's issuing bank. The "blended" rate is the weighted average across all card types processed. At 1.72%, this client is paying $72,240/month just in interchange. If you can optimize even 0.10%, that's $4,200/month savings — a powerful client conversation.</div>
-        <tr class="clickable-row row-alert" onclick="showAnnotation('avoidable')"><td>Assessment fees</td><td>Network fees (Visa/MC/Amex assessments)</td><td>—</td><td>0.14%</td><td class="ic-alert">$5,880</td></tr>
-        <div id="ann-avoidable" class="annotation-box"><div class="ann-title">Assessment fees — check for avoidable charges</div>Assessment fees are charged by the card networks (not JPMorgan). Some assessments are unavoidable; others can be reduced. <strong>This is a Payment Explorer focus area.</strong> If you see assessment fees higher than expected, dig into whether the client is triggering fees through transaction routing or data submission gaps. Andrew described exactly this type of finding as an "avoidable fee."</div>
-        <tr class="clickable-row" onclick="showAnnotation('processing')"><td>Processing / service fee</td><td>JPMorgan's service fee per transaction</td><td>42,000 txns</td><td>$0.12/txn</td><td>$5,040</td></tr>
-        <div id="ann-processing" class="annotation-box"><div class="ann-title">Processing / service fee</div>This is JPMorgan's revenue from this client — the per-transaction fee negotiated in the contract. This is what re-contracting conversations center on. When a client pushes back on this fee, your job is to demonstrate the value delivered — auth rate optimization, proactive monitoring, QBR insights — that justifies the relationship cost.</div>
-        <tr class="clickable-row row-alert" onclick="showAnnotation('chargebacks')"><td>Chargeback fees</td><td>Fee per chargeback received ($25/item)</td><td>18 chargebacks</td><td>$25.00</td><td class="ic-alert">$450</td></tr>
-        <div id="ann-chargebacks" class="annotation-box"><div class="ann-title">Chargeback fees — watch the ratio</div>18 chargebacks on 42,000 transactions = 0.043% ratio — well within Visa's 1% threshold. But each chargeback costs $25 in fees plus the lost transaction value. If this number starts climbing, it's a conversation to have before it becomes a network monitoring issue. Andrew's card testing scenario — where chargebacks spike suddenly — would show up dramatically in this line.</div>
-        <tr class="clickable-row row-good" onclick="showAnnotation('pci')"><td>PCI compliance fee</td><td>Monthly PCI DSS compliance program</td><td>—</td><td>Flat</td><td style="color:var(--teal-dark);">$29.95</td></tr>
-        <div id="ann-pci" class="annotation-box"><div class="ann-title">PCI compliance fee</div>This is a flat monthly fee for JPMorgan's PCI compliance program — it covers the client's annual SAQ (Self-Assessment Questionnaire) and breach insurance. If a client is non-compliant, this fee is often replaced by a much larger non-compliance fee ($100+/month). When you see PCI non-compliance fees on a statement, that's an urgent conversation.</div>
-        <tr style="font-weight:700;background:var(--navy);"><td style="color:var(--gold-light);">Total fees this month</td><td style="color:rgba(255,255,255,.6);">All fees combined</td><td style="color:rgba(255,255,255,.6);">—</td><td style="color:rgba(255,255,255,.6);">Effective rate: 1.99%</td><td style="color:var(--gold-light);">$83,639</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div id="ann-volume" class="annotation-box"></div>
-  <div id="ann-interchange" class="annotation-box"></div>
-  <div id="ann-avoidable" class="annotation-box"></div>
-  <div id="ann-processing" class="annotation-box"></div>
-  <div id="ann-chargebacks" class="annotation-box"></div>
-  <div id="ann-pci" class="annotation-box"></div>
-  <div class="card" style="margin-top:14px;">
-    <div style="font-weight:600;color:var(--navy);margin-bottom:7px;font-size:14px;">The RM takeaway from this statement</div>
-    <div style="font-size:13px;color:var(--ink-mid);line-height:1.7;">At a glance: client is processing $4.2M/month at an effective rate of 1.99%. Interchange is 86% of total fees. Chargebacks are healthy. <strong style="color:var(--teal-dark);">Opportunity:</strong> If this client has B2B commercial card volume, Level 2/3 data optimization could reduce their blended interchange rate meaningfully. Bring this to the next QBR with a dollar estimate.</div>
-  </div>
-</div>
-
-<!-- QUIZ -->
-<div id="view-quiz" class="view">
-  <div id="quiz-start-screen">
-    <div class="quiz-start-card">
-      <div class="quiz-start-title">Knowledge check</div>
-      <div class="quiz-start-sub">10 questions — concepts, scenarios, and real situations from Andrew's conversation</div>
-      <button class="start-btn" onclick="startQuiz()">Begin quiz →</button>
-    </div>
-  </div>
-  <div id="quiz-main-screen" class="hidden">
-    <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="q-prog"></div></div>
-    <div class="quiz-num" id="q-num"></div>
-    <div class="quiz-q" id="q-text"></div>
-    <div id="q-opts"></div>
-    <div class="quiz-feedback" id="q-feedback"></div>
-    <div style="overflow:hidden;"><button class="next-btn hidden" id="q-next" onclick="nextQ()">Next question →</button></div>
-  </div>
-  <div id="quiz-done-screen" class="hidden">
-    <div class="card" style="text-align:center;padding:36px;">
-      <div style="font-size:13px;color:var(--ink-faint);margin-bottom:7px;text-transform:uppercase;letter-spacing:.1em;">Final score</div>
-      <div class="score-display" id="q-score"></div>
-      <div style="font-size:14px;color:var(--ink-mid);margin:11px 0 22px;" id="q-msg"></div>
-      <button class="start-btn" onclick="restartQuiz()">Retake quiz</button>
-    </div>
-  </div>
-</div>
-
-<!-- BRM SCENARIOS -->
-<div id="view-scenarios" class="view">
-  <div class="view-title">BRM Scenarios</div>
-  <div class="view-subtitle">Real situations from Andrew's conversation — how to think, respond, and connect to your background</div>
-  <div class="card" style="background:var(--navy);border-color:var(--navy);margin-bottom:18px;"><div style="font-size:13px;color:rgba(255,255,255,.75);line-height:1.7;"><span style="color:var(--gold-light);font-weight:600;">Andrew's core framing:</span> "The client passes you the ball. Your job is knowing immediately where to route it — and when to run with it yourself."</div></div>
-  <div id="scenarios-list"></div>
-</div>
-
-<!-- DAY IN THE LIFE -->
-<div id="view-daylife" class="view">
-  <div class="view-title">Day in the life</div>
-  <div class="view-subtitle">A typical RM week — anchored to what Andrew actually described</div>
-  <div class="card" style="background:var(--navy);border-color:var(--navy);margin-bottom:18px;"><div style="font-size:13px;color:rgba(255,255,255,.8);line-height:1.7;">Andrew said: <em style="color:var(--gold-light);">"It's a very fast-paced role. I wouldn't call it a 9-to-5. Payments are processing at all times — someone could make an insurance payment at 2 AM."</em></div></div>
-  <div class="grid-2" style="margin-bottom:18px;">
-    <div class="card" style="background:var(--teal-pale);border-color:rgba(29,158,117,.2);"><div style="font-weight:600;color:var(--teal-dark);margin-bottom:5px;">Recurring weekly</div><div style="font-size:13px;color:var(--teal-dark);line-height:1.8;">✦ Morning email triage — client issues overnight?<br>✦ Open items log review per client<br>✦ Internal check-ins with banker/treasury reps<br>✦ Client touch points (varies: weekly/biweekly/monthly)</div></div>
-    <div class="card" style="background:var(--amber-pale);border-color:rgba(201,168,76,.25);"><div style="font-weight:600;color:var(--amber-dark);margin-bottom:5px;">Recurring monthly</div><div style="font-size:13px;color:var(--amber-dark);line-height:1.8;">✦ Payment Explorer review for all clients<br>✦ Proactive outreach on any anomalies found<br>✦ Salesforce opportunity pipeline update<br>✦ QBR prep (for whichever client is upcoming)</div></div>
-  </div>
-  <div class="section-label">A typical week — Monday through Friday</div>
-  <div class="timeline">
-    <div class="timeline-item fire">
-      <div class="timeline-dot"></div>
-      <div class="timeline-time">Monday morning</div>
-      <div class="timeline-title">Email triage — first thing</div>
-      <div class="timeline-detail">Check overnight emails before anything else. Did a client go hard down? Is there a fraud alert? An urgent report request? Triage by revenue impact — fire drills first, report requests can wait.</div>
-      <div class="timeline-andrew">Andrew: "First thing in the morning, first thing you do — you've got to jump on it."</div>
-    </div>
-    <div class="timeline-item client">
-      <div class="timeline-dot"></div>
-      <div class="timeline-time">Monday–Tuesday</div>
-      <div class="timeline-title">Client touch points</div>
-      <div class="timeline-detail">Scheduled calls with clients based on their preferred cadence (weekly, biweekly, or monthly). Review open items log before each call. Have 1-2 proactive agenda items ready — don't just react to their list.</div>
-      <div class="timeline-andrew">Andrew: "Some clients like to see you every two weeks, once a week, once a month — it varies."</div>
-    </div>
-    <div class="timeline-item internal">
-      <div class="timeline-dot"></div>
-      <div class="timeline-time">Mid-week</div>
-      <div class="timeline-title">Internal coordination</div>
-      <div class="timeline-detail">Follow up on items routed to internal teams (technical support, account management, reporting). Chase people who haven't responded. Brief your banker and treasury rep contacts on anything that touches their client relationships.</div>
-      <div class="timeline-andrew">Andrew: "Getting people to respond is one of the most difficult things. You're kind of subject to — man, I'm doing one thing but it required 45 things before that."</div>
-    </div>
-    <div class="timeline-item data">
-      <div class="timeline-dot"></div>
-      <div class="timeline-time">Week 1 of month</div>
-      <div class="timeline-title">Payment Explorer monthly review</div>
-      <div class="timeline-detail">Pull reports for all clients. Flag auth rate drops, avoidable fees, chargeback trends. Quantify dollar impact. Draft proactive outreach for any anomalies. Log revenue opportunities in Salesforce.</div>
-      <div class="timeline-andrew">Andrew: "I go in once a month. If I see something I always reach out proactively."</div>
-    </div>
-    <div class="timeline-item admin">
-      <div class="timeline-dot"></div>
-      <div class="timeline-time">Ongoing</div>
-      <div class="timeline-title">Open items log discipline</div>
-      <div class="timeline-detail">Document every client conversation. Add new items immediately. Close out resolved items. Never let an item go dark — clients notice. Salesforce: log every formal opportunity same day.</div>
-      <div class="timeline-andrew">Andrew: "Get an Excel for each client — your open items list. Document your conversations as you go along."</div>
-    </div>
-    <div class="timeline-item client">
-      <div class="timeline-dot"></div>
-      <div class="timeline-time">Quarterly</div>
-      <div class="timeline-title">QBR preparation and delivery</div>
-      <div class="timeline-detail">Three weeks out: pull Payment Explorer data, research client's industry news with LLMs, build slide narrative. One week out: share draft agenda with client, invite them to add items. Day of: show up as yourself, own the insights, take action items clean.</div>
-      <div class="timeline-andrew">Andrew: "There is nothing better than coming out of a QBR and just crushing it."</div>
-    </div>
-    <div class="timeline-item">
-      <div class="timeline-dot"></div>
-      <div class="timeline-time">April & October</div>
-      <div class="timeline-title">Brand release cycle</div>
-      <div class="timeline-detail">Visa and Mastercard release updates twice a year. Internal team maps changes to your client portfolio. Your job: understand the impact per client, calculate the dollar effect, communicate proactively — before it hits their statements.</div>
-      <div class="timeline-andrew">Andrew: "Every year it's different. We're all picking up the pieces — but you want to be the one communicating it first."</div>
-    </div>
-  </div>
-</div>
-
-<!-- BANKER TRIANGLE -->
-<div id="view-banker" class="view">
-  <div class="view-title">The banker triangle</div>
-  <div class="view-subtitle">The three-way relationship that makes JPMorgan unique — and that you must actively manage</div>
-  <div class="card" style="background:var(--navy);border-color:var(--navy);margin-bottom:18px;"><div style="font-size:13px;color:rgba(255,255,255,.8);line-height:1.7;">Andrew said: <em style="color:var(--gold-light);">"You're going to get assigned banking relationships and Treasury relationships. Part of your relationship building with your client is about building the relationship with your bankers and Treasury reps — keeping them updated on what you're doing. Because they impact their revenue and their relationship."</em></div></div>
-  <div class="triangle-wrap">
-    <div class="triangle-node" style="background:var(--navy);">
-      <div class="triangle-node-title" style="color:var(--gold-light);">You — RM Payments</div>
-      <div class="triangle-node-owns" style="color:rgba(255,255,255,.7);">Owns: merchant processing relationship, auth rate optimization, interchange, chargebacks, QBRs, brand releases, revenue growth</div>
-    </div>
-    <div class="triangle-node" style="background:var(--blue-pale);">
-      <div class="triangle-node-title" style="color:var(--blue-dark);">Commercial Banker</div>
-      <div class="triangle-node-owns">Owns: overall banking relationship — loans, credit facilities, deposits, overall client P&L for JPMorgan</div>
-    </div>
-    <div class="triangle-node" style="background:var(--teal-pale);">
-      <div class="triangle-node-title" style="color:var(--teal-dark);">Treasury Rep</div>
-      <div class="triangle-node-owns">Owns: cash management, account structures, liquidity, wire/ACH, and often the primary day-to-day banking contact for the client's treasury team</div>
-    </div>
-  </div>
-  <div class="section-label">How the three relationships interact</div>
-  <div class="triangle-arrows">
-    <div class="triangle-row"><div class="triangle-row-label">RM → Banker</div><div>Keep banker updated on merchant services health and opportunities. A client growing payment volume = more revenue for the bank overall. Alert banker when client expresses frustration — they need to know if the relationship is at risk.</div></div>
-    <div class="triangle-row"><div class="triangle-row-label">RM → Treasury rep</div><div>Treasury rep often has the closest day-to-day relationship with the client's finance team. They can warm introductions, flag upcoming client needs, and co-coordinate QBRs. Share Payment Explorer insights that may affect the client's cash flow conversation.</div></div>
-    <div class="triangle-row"><div class="triangle-row-label">Banker → RM</div><div>Banker may flag that a client is unhappy, considering switching banks, or expanding into a new business line. Each of these is a signal for the RM — an unhappy client needs proactive outreach; a new business line may need new payment infrastructure.</div></div>
-    <div class="triangle-row"><div class="triangle-row-label">All three → Client</div><div>The client's treasurer deals with all three of you. When you're all aligned — same message, no surprises — the client feels like they have one integrated JPMorgan team, not three separate vendors. That cohesion is a retention advantage.</div></div>
-  </div>
-  <div class="section-label">Who you'll meet on the client side</div>
-  <div class="grid-2">
-    <div class="card"><div class="tag tag-blue">Treasury team</div><div style="font-size:13px;color:var(--ink-mid);line-height:1.8;"><strong>Treasurer / Assistant Treasurer</strong> — your primary contact. Makes cost-impacting decisions. Cares about interchange optimization, avoidable fees, and processing reliability.<br><br><strong>VP of Finance / CFO</strong> — involved in re-contracting and strategic decisions. Show up with data and ROI framing.</div></div>
-    <div class="card"><div class="tag tag-teal">Technology team</div><div style="font-size:13px;color:var(--ink-mid);line-height:1.8;"><strong>Director of IT / Head of Payments Technology</strong> — handles connectivity, gateway integrations, technical issues.<br><br><strong>Note:</strong> JPMorgan also assigns a Technical Client Service Manager to partner with you on the tech relationship — you own the business side, they own the tech side.</div></div>
-  </div>
-  <div class="card" style="background:var(--amber-pale);border-color:var(--border-gold);">
-    <div style="font-weight:600;color:var(--amber-dark);margin-bottom:6px;">Your bridge to this skill</div>
-    <div style="font-size:13px;color:var(--amber-dark);line-height:1.7;">At SNHU you coordinated across academic leadership, technology teams, and administrative stakeholders — three different groups with different priorities, all needing to feel informed and aligned. At FSU the same three-way dynamic existed between deans, student affairs, and external partners. This is the same relationship architecture — you just need to learn the JPMorgan version of who's who.</div>
-  </div>
-</div>
-
-<!-- INSURANCE VERTICAL -->
-<div id="view-insurance" class="view">
-  <div class="view-title">Insurance vertical</div>
-  <div class="view-subtitle">Andrew's primary vertical — understand their world to show up as a strategic partner, not just a processor</div>
-  <div class="card" style="background:var(--navy);border-color:var(--navy);margin-bottom:18px;"><div style="font-size:13px;color:rgba(255,255,255,.8);line-height:1.7;">Andrew said: <em style="color:var(--gold-light);">"Insurance companies are very cost-conscious now. With the rise in inflation, litigation costs, fossil fuel costs, car parts costs with tariffs — they're more cost-conscious than they've ever been. How do we, from a merchant services perspective, help them optimize on cost?"</em></div></div>
-  <div class="section-label">The insurance industry's payments profile</div>
-  <div class="grid-3">
-    <div class="ins-stat"><div class="ins-stat-num">85%+</div><div class="ins-stat-label">of insurance premiums collected via card/digital (CNP dominant)</div></div>
-    <div class="ins-stat"><div class="ins-stat-num">Recurring</div><div class="ins-stat-label">billing model — monthly/annual premiums create predictable volume</div></div>
-    <div class="ins-stat"><div class="ins-stat-num">Cost</div><div class="ins-stat-label">is now the #1 concern — margin compression from all sides</div></div>
-  </div>
-  <div class="section-label">Why insurance is different from retail</div>
-  <div class="card">
-    <div style="font-size:13px;color:var(--ink-mid);line-height:1.8;">
-      <strong style="color:var(--navy);">Recurring billing model:</strong> Insurance clients process the same customers repeatedly — monthly or annual premium payments. This creates stable, predictable volume but also means auth rate failures directly translate to policy lapses, which is a customer experience crisis for the insurer.<br><br>
-      <strong style="color:var(--navy);">CNP-dominant:</strong> Nearly all insurance payment collection happens card-not-present — online portals, auto-pay, phone payments. This means higher interchange rates and greater emphasis on fraud management and auth rate optimization.<br><br>
-      <strong style="color:var(--navy);">Cost pressure is acute:</strong> Andrew described it directly — inflation, litigation costs, tariff impacts on auto parts. The insurance sector is seeing margin compression they haven't experienced before. This makes every basis point of interchange optimization meaningful.<br><br>
-      <strong style="color:var(--navy);">Low chargeback exposure:</strong> Unlike retail, insurance clients tend to have low chargeback rates — customers generally want their coverage. Fraud risk is moderate but manageable.
-    </div>
-  </div>
-  <div class="section-label">Current macro pressures on insurance — Andrew's context</div>
-  <div class="grid-2">
-    <div class="card">
-      <div class="tag tag-coral">Cost pressures</div>
-      <div style="font-size:13px;color:var(--ink-mid);line-height:1.8;">✦ Auto parts inflation — tariffs driving repair cost increases<br>✦ Litigation environment — claims costs rising<br>✦ Reinsurance costs increasing<br>✦ Regulatory pressure on rate increases<br>✦ All of these squeeze margin → every processing cost dollar matters</div>
-    </div>
-    <div class="card">
-      <div class="tag tag-teal">Your merchant services angle</div>
-      <div style="font-size:13px;color:var(--ink-mid);line-height:1.8;">✦ Interchange optimization = direct cost reduction<br>✦ Auth rate improvement = fewer policy lapses, better customer retention<br>✦ Soft decline retry optimization = recovered premium revenue<br>✦ Level 2 data on commercial policies = lower rates<br>✦ Consolidated reporting = finance team efficiency</div>
-    </div>
-  </div>
-  <div class="section-label">How to use industry knowledge in conversations — Andrew's method</div>
-  <div class="card" style="background:var(--blue-pale);border-color:rgba(27,58,107,.15);">
-    <div style="font-size:13px;color:var(--blue-dark);line-height:1.8;">
-      <strong>Step 1:</strong> Before any client meeting, use an LLM (Claude, ChatGPT) to brief yourself on recent news in their specific insurance segment — auto, home, commercial, health.<br><br>
-      <strong>Step 2:</strong> Look for themes that connect to their payment costs: if auto insurers are talking about tariff-driven repair cost inflation, the conversation is about cost optimization at every level — including processing.<br><br>
-      <strong>Step 3:</strong> Bring it to the meeting naturally: <em>"I was reading about the tariff impacts on auto repair costs — has that shifted how your team is thinking about cost containment across the board? I want to make sure we're doing everything we can on the processing side to help."</em><br><br>
-      Andrew said: <em style="color:var(--navy-mid);">"If you do tell them about something you read, they might be very happy — it shows you understand their industry."</em>
-    </div>
-  </div>
-  <div class="card" style="background:var(--amber-pale);border-color:var(--border-gold);margin-top:4px;">
-    <div style="font-weight:600;color:var(--amber-dark);margin-bottom:6px;">Your bridge</div>
-    <div style="font-size:13px;color:var(--amber-dark);line-height:1.7;">At FSU and SNHU you constantly had to understand your stakeholders' institutional pressures before walking into a meeting. At Reflekt Me you studied your retail clients' conversion economics before proposing solutions. Industry intelligence as a pre-meeting practice is already how you operate — you just need to point it at insurance now.</div>
-  </div>
-</div>
-
-<!-- SALESFORCE -->
-<div id="view-salesforce" class="view">
-  <div class="view-title">Salesforce workflow</div>
-  <div class="view-subtitle">How RMs use Salesforce for opportunity tracking — Andrew said it's a mandate, not optional</div>
-  <div class="card" style="background:var(--navy);border-color:var(--navy);margin-bottom:18px;"><div style="font-size:13px;color:rgba(255,255,255,.8);line-height:1.7;">Andrew said: <em style="color:var(--gold-light);">"When you have an opportunity, you need to log it in Salesforce. Not all of us do it perfectly — if something's wrong, someone will reach out to you. Just pick it back up. But it's a mandate."</em></div></div>
-  <div class="section-label">What gets logged in Salesforce</div>
-  <div class="card">
-    <div style="font-size:13px;color:var(--ink-mid);line-height:1.8;margin-bottom:10px;">In payments RM, Salesforce tracks <strong style="color:var(--navy);">revenue opportunities</strong> — situations where you have identified a potential to grow revenue with an existing client or win new business. Think of it as your formal pipeline.</div>
-    <div style="font-size:13px;color:var(--ink-mid);line-height:1.8;"><strong style="color:var(--navy);">When to log:</strong> Any time you identify a concrete revenue opportunity — a client conversation about expanding services, a cross-sell from your banker, a client exploring a new payment channel, a re-contracting conversation starting.</div>
-  </div>
-  <div class="section-label">Opportunity pipeline stages</div>
-  <div class="card">
-    <div class="sf-stage"><div class="sf-bubble">1</div><div class="sf-stage-content"><div class="sf-stage-name">Identify / Qualify</div><div class="sf-stage-detail">You've spotted a potential opportunity — a client mentions they're processing payments through a competitor for one product line, or a banker flags that a client is expanding into e-commerce. Log it now. Probability: 10-20%.</div></div></div>
-    <div class="sf-stage"><div class="sf-bubble">2</div><div class="sf-stage-content"><div class="sf-stage-name">Discovery / Needs analysis</div><div class="sf-stage-detail">You've had a conversation with the client about the opportunity. You understand their current situation and what they'd need. You're building the business case. Probability: 30-40%.</div></div></div>
-    <div class="sf-stage"><div class="sf-bubble">3</div><div class="sf-stage-content"><div class="sf-stage-name">Proposal</div><div class="sf-stage-detail">You've presented a formal solution or pricing to the client. They're evaluating. This is a real, active opportunity. Probability: 50-60%.</div></div></div>
-    <div class="sf-stage"><div class="sf-bubble">4</div><div class="sf-stage-content"><div class="sf-stage-name">Negotiation / Commit</div><div class="sf-stage-detail">Client has signaled intent to move forward. You're working through final terms. Probability: 70-85%.</div></div></div>
-    <div class="sf-stage"><div class="sf-bubble">✓</div><div class="sf-stage-content"><div class="sf-stage-name">Closed Won / Closed Lost</div><div class="sf-stage-detail">Contract signed (Won) or client went another direction (Lost). Log the outcome and reason — this data informs team strategy and your own coaching.</div></div></div>
-  </div>
-  <div class="section-label">What to log when you log an opportunity</div>
-  <div class="grid-2">
-    <div class="card"><div class="tag tag-blue">Required fields</div><div style="font-size:13px;color:var(--ink-mid);line-height:1.9;">✦ Client name and account<br>✦ Opportunity type (new product, expansion, re-contracting)<br>✦ Estimated annual revenue value<br>✦ Current stage<br>✦ Expected close date<br>✦ Notes on what triggered the opportunity</div></div>
-    <div class="card"><div class="tag tag-teal">Good practice</div><div style="font-size:13px;color:var(--ink-mid);line-height:1.9;">✦ Log the same day you identify it — memory fades<br>✦ Update stage after every meaningful client conversation<br>✦ Note who the decision-maker is on the client side<br>✦ Flag if banker or treasury rep is involved — helps with internal alignment reporting<br>✦ Don't let opportunities sit at the same stage for more than 30 days without an update</div></div>
-  </div>
-  <div class="card" style="background:var(--amber-pale);border-color:var(--border-gold);margin-top:4px;">
-    <div style="font-weight:600;color:var(--amber-dark);margin-bottom:6px;">The open items log vs. Salesforce — what goes where</div>
-    <div style="font-size:13px;color:var(--amber-dark);line-height:1.7;"><strong>Open items Excel:</strong> Everything — service issues, report requests, follow-ups, client questions, action items. This is your personal client management system.<br><br><strong>Salesforce:</strong> Formal revenue opportunities only — things that will generate income for JPMorgan if they close. Andrew described keeping a revenue opportunity tab in his client Excel as a "selfishly" personal tracker — Salesforce is the official record.</div>
-  </div>
-</div>
-
-<!-- STORY -->
-<div id="view-story" class="view">
-  <div class="view-title">Your story</div>
-  <div class="view-subtitle">Four bridge themes — connect every payments concept back to your experience</div>
-  <div class="positioning-card">
-    <div class="positioning-quote">"I bring something rare to this role: deep experience managing enterprise relationships and driving measurable outcomes, combined with genuine technology and product fluency. Most RMs can own a client relationship. Fewer can also help a client think through integrated payments strategy, diagnose conversion friction, or evaluate how their payment infrastructure connects to their broader technology stack."</div>
-    <div class="positioning-attr">— Your core positioning statement</div>
-  </div>
-  <div class="story-block">
-    <div class="story-theme">Relationship management</div>
-    <div class="story-point">At Reflekt Me, I was the primary point of contact for enterprise retail clients — managing onboarding, performance, escalations, and ongoing optimization against defined SLAs.</div>
-    <div class="story-point">At FSU, I managed relationships across academic departments and external partners — coordinating stakeholders with competing priorities toward shared institutional goals.</div>
-    <div class="story-point">At SNHU, I served as liaison between platforms serving 280,000+ users and executive stakeholders — translating performance data into strategic recommendations.</div>
-  </div>
-  <div class="story-block">
-    <div class="story-theme">Revenue & growth accountability</div>
-    <div class="story-point">At Reflekt Me, our platform drove a 75% conversion rate for enterprise clients — a direct revenue outcome tied to client renewal and expansion decisions.</div>
-    <div class="story-point">At FSU, I oversaw $2M+ in combined budgets, ensuring resource allocation was tied to measurable program outcomes.</div>
-    <div class="story-point">My QBR experience was exactly re-contracting in practice: making the case for continued and expanded investment with data and strategic framing.</div>
-  </div>
-  <div class="story-block">
-    <div class="story-theme">Technology & product fluency</div>
-    <div class="story-point">Integrated payments is where the market is moving. My product background lets me have that conversation with clients in a way most RMs cannot — I understand APIs, integration complexity, and translating technical capability into business value.</div>
-    <div class="story-point">At Reflekt Me, I managed platform integrations with enterprise retail clients — the same conversation as payment gateway integration.</div>
-    <div class="story-point">At Fathom, I worked on a platform integrating AI, CRM, and workforce tools — I understand where integration friction lives.</div>
-  </div>
-  <div class="story-block">
-    <div class="story-theme">Consultative, data-driven approach</div>
-    <div class="story-point">At SNHU, I built reporting frameworks and dashboards, then used insights to drive executive decisions. That's the QBR skill set.</div>
-    <div class="story-point">At Reflekt Me, we led with conversion data and business impact — not product features. That's consultative selling.</div>
-    <div class="story-point">At FSU, early alert systems identified at-risk students before outcomes deteriorated. Same pattern: monitor auth rates, identify decline trends, intervene before the client feels the pain.</div>
-  </div>
-</div>
-
-<!-- SMART QUESTIONS -->
-<div id="view-questions" class="view">
-  <div class="view-title">Smart questions</div>
-  <div class="view-subtitle">Click any question to copy it. Use 2 per conversation — internalize, don't read.</div>
-  <div class="q-context-group">
-    <div class="q-context-header"><div class="q-context-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="1.8"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div><div><div class="q-context-title">Hiring manager / exec level</div><div class="q-context-sub">Strategic depth — show you think about the business</div></div></div>
-    <div class="q-item" onclick="copyQ(this)"><div class="q-context-tag">On client strategy</div><div class="q-text">"How do you think about the balance between defending existing volume and pursuing incremental business — does that shift by client maturity?"</div><span class="q-copied">Copied!</span></div>
-    <div class="q-item" onclick="copyQ(this)"><div class="q-context-tag">On team structure</div><div class="q-text">"How closely does the RM team coordinate with treasury services on joint client strategy — is that integration formal or relationship-driven?"</div><span class="q-copied">Copied!</span></div>
-    <div class="q-item" onclick="copyQ(this)"><div class="q-context-tag">On technology direction</div><div class="q-text">"Where do you see integrated payments heading for your Middle Market clients — is that a growth opportunity the team is actively pursuing?"</div><span class="q-copied">Copied!</span></div>
-    <div class="q-item" onclick="copyQ(this)"><div class="q-context-tag">On success metrics</div><div class="q-text">"Beyond revenue targets, what does a high-performing RM look like in this organization — what behaviors distinguish the best ones?"</div><span class="q-copied">Copied!</span></div>
-  </div>
-  <div class="q-context-group">
-    <div class="q-context-header"><div class="q-context-icon" style="background:var(--teal-dark);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="1.8"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.42-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg></div><div><div class="q-context-title">Peer RM or team member</div><div class="q-context-sub">Genuine curiosity — learn from someone doing the job</div></div></div>
-    <div class="q-item" onclick="copyQ(this)"><div class="q-context-tag">On the client experience</div><div class="q-text">"What does a typical QBR look like for your clients — how much of it is performance reporting vs. strategic conversation?"</div><span class="q-copied">Copied!</span></div>
-    <div class="q-item" onclick="copyQ(this)"><div class="q-context-tag">On the learning curve</div><div class="q-text">"What took you the longest to get fluent on — the product knowledge, the internal navigation, or the client dynamics?"</div><span class="q-copied">Copied!</span></div>
-    <div class="q-item" onclick="copyQ(this)"><div class="q-context-tag">On internal collaboration</div><div class="q-text">"How do you work with commercial bankers day to day — mostly joint client opportunities or more reactive?"</div><span class="q-copied">Copied!</span></div>
-    <div class="q-item" onclick="copyQ(this)"><div class="q-context-tag">On pain points</div><div class="q-text">"Where do clients push back most — is it on pricing, service issues, or something else entirely?"</div><span class="q-copied">Copied!</span></div>
-  </div>
-  <div class="q-context-group">
-    <div class="q-context-header"><div class="q-context-icon" style="background:var(--amber-dark);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="1.8"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><div><div class="q-context-title">Partner or exec director in payments</div><div class="q-context-sub">Market-level thinking — show you see the industry</div></div></div>
-    <div class="q-item" onclick="copyQ(this)"><div class="q-context-tag">On the market</div><div class="q-text">"How is the shift toward embedded and integrated payments showing up in your Middle Market segment — are clients asking for it or being led to it?"</div><span class="q-copied">Copied!</span></div>
-    <div class="q-item" onclick="copyQ(this)"><div class="q-context-tag">On differentiation</div><div class="q-text">"What's the strongest case you make to a client evaluating JPMorgan against a technology-first processor like Stripe or Adyen?"</div><span class="q-copied">Copied!</span></div>
-    <div class="q-item" onclick="copyQ(this)"><div class="q-context-tag">On cross-sell</div><div class="q-text">"How coordinated is the cross-sell motion between Merchant Services and Payments Treasury Services — formal process or relationship-dependent?"</div><span class="q-copied">Copied!</span></div>
-  </div>
-</div>
-
-<!-- GLOSSARY -->
-<div id="view-glossary" class="view">
-  <div class="view-title">JPMorgan glossary</div>
-  <div class="view-subtitle">Internal language, tools, and terms you'll hear — know these so you sound like you belong there</div>
-  <div class="card" style="margin-bottom:14px;"><div style="font-size:13px;color:var(--ink-light);">These are terms used specifically inside JPMorgan Merchant Services — distinct from general payments industry vocabulary. Andrew used many of these naturally in your conversation.</div></div>
-  <div id="glossary-render"></div>
-</div>
-
-<!-- CHECKLIST -->
-<div id="view-checklist" class="view">
-  <div class="view-title">Pre-meeting checklist</div>
-  <div class="view-subtitle">Five minutes before every conversation. Check each item as you go.</div>
-  <div class="card"><div id="checklist-items"></div></div>
-  <button class="reset-btn" onclick="resetChecklist()">↺ Reset checklist</button>
-</div>
-
-<!-- AUDIO / VIDEO PLAYER -->
-<div id="view-audio" class="view">
-  <div class="view-title">Audio / Video player</div>
-  <div class="view-subtitle">Upload an MP4 or audio file to play it here — recordings, interview prep sessions, or study notes</div>
-
-  <div id="audio-upload-zone" class="card" style="border:2px dashed var(--border-gold); background:var(--gold-pale); text-align:center; padding:40px 24px; cursor:pointer; transition:all 0.2s;" onclick="document.getElementById('audio-file-input').click()" ondragover="audioDragOver(event)" ondrop="audioDrop(event)">
-    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" style="margin:0 auto 16px; display:block;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg>
-    <div style="font-family:'DM Serif Display',serif; font-size:20px; color:var(--navy); margin-bottom:8px;">Drop your file here</div>
-    <div style="font-size:13px; color:var(--ink-light); margin-bottom:16px;">or click to browse — MP4, MP3, M4A, WAV supported · up to 500MB</div>
-    <div style="display:inline-block; background:var(--navy); color:white; padding:10px 24px; border-radius:8px; font-size:14px; font-weight:500;">Choose file</div>
-    <input type="file" id="audio-file-input" accept="video/mp4,audio/mp4,audio/mpeg,audio/mp3,audio/m4a,audio/wav,audio/ogg,.mp4,.mp3,.m4a,.wav,.ogg" style="display:none;" onchange="audioFileSelected(this)">
-  </div>
-
-  <div id="audio-player-section" style="display:none;">
-    <div class="card" style="padding:0; overflow:hidden; margin-bottom:16px;">
-      <div style="background:var(--navy); padding:16px 20px; display:flex; align-items:center; justify-content:space-between;">
-        <div>
-          <div style="font-size:13px; color:var(--gold-light); font-weight:500;" id="audio-filename">File name</div>
-          <div style="font-size:11px; color:rgba(255,255,255,0.45); margin-top:2px;" id="audio-filesize"></div>
-        </div>
-        <button onclick="clearAudioPlayer()" style="background:rgba(255,255,255,0.1); border:none; color:rgba(255,255,255,0.6); font-size:12px; padding:6px 12px; border-radius:6px; cursor:pointer; font-family:'DM Sans',sans-serif;">✕ Remove</button>
-      </div>
-      <div style="padding:20px;">
-        <video id="audio-player-video" controls style="width:100%; border-radius:8px; background:#000; display:none; max-height:360px;"></video>
-        <audio id="audio-player-audio" controls style="width:100%; display:none;"></audio>
-      </div>
-    </div>
-
-    <div class="grid-2">
-      <div class="card">
-        <div class="section-label" style="margin-bottom:10px;">Playback tips</div>
-        <ul style="font-size:13px; color:var(--ink-mid); line-height:1.85; padding-left:16px; list-style:disc;">
-          <li>Use <strong>spacebar</strong> to pause/play</li>
-          <li>Use <strong>← →</strong> arrow keys to skip 5 seconds</li>
-          <li>Right-click the player to change playback speed</li>
-          <li>1.25× or 1.5× speed is good for review sessions</li>
-          <li>File stays loaded until you refresh the page</li>
-        </ul>
-      </div>
-      <div class="card">
-        <div class="section-label" style="margin-bottom:10px;">How to use this section</div>
-        <ul style="font-size:13px; color:var(--ink-mid); line-height:1.85; padding-left:16px; list-style:disc;">
-          <li>Upload recordings of practice interviews or prep sessions</li>
-          <li>Play back meeting recordings to review key takeaways</li>
-          <li>Listen to your own pitch and identify improvements</li>
-          <li>Files are loaded locally — nothing is uploaded to a server</li>
-          <li>Upload a new file anytime by clicking "Remove" above</li>
-        </ul>
-      </div>
+    <div class="sc-problem">
+      <div class="sc-problem-label">What's actually going on</div>
+      <div class="sc-problem-text" id="sc-problem"></div>
     </div>
   </div>
 
-  <div id="audio-error" style="display:none;" class="card" style="background:var(--coral-pale); border-color:rgba(216,90,48,0.3);">
-    <div style="font-size:14px; color:var(--coral-dark);" id="audio-error-msg"></div>
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('steps')">Your Move Sequence</button>
+    <button class="tab-btn" onclick="switchTab('language')">Interview Language</button>
+    <button class="tab-btn" onclick="switchTab('traps')">Traps &amp; Reframes</button>
   </div>
-</div>
 
-  </div><!-- /content -->
-</main>
+  <div class="tab-panel active" id="tab-steps"></div>
+  <div class="tab-panel" id="tab-language"></div>
+  <div class="tab-panel" id="tab-traps"></div>
+
+  <!-- Footer Nav -->
+  <div class="footer-nav">
+    <div class="footer-count" id="footer-count"></div>
+    <div class="footer-btns">
+      <button class="footer-btn" id="btn-prev" onclick="navigate(-1)">← Previous</button>
+      <button class="footer-btn primary" id="btn-next" onclick="navigate(1)">Next →</button>
+    </div>
+  </div>
+
 </div>
 
 <script>
-// ── ECO ──
-const ecoDetails={cardholder:{title:"Cardholder",text:"The customer making a purchase with a credit or debit card. Their experience — speed, approval rate, security — directly drives merchant revenue. Their bank (the issuer) decides in milliseconds whether to approve or decline the transaction."},issuer:{title:"Issuing bank",text:"The bank that issued the card to the customer (e.g., Bank of America). The issuer sets interchange rates and approves or declines transactions. When auth rates are low, the issuer's risk models are often the root cause — a core client conversation."},network:{title:"Card network (Visa/MC/Amex)",text:"Card networks set the rules all parties must follow and publish interchange rate schedules. They don't process transactions — they provide the rails and governance. Twice a year they release updates that every RM must understand and communicate."},jpmorgan:{title:"JPMorgan — the acquirer (★ your role)",text:"JPMorgan acts as the acquiring bank and processor: they hold a processing relationship with the merchant, route transactions through the network, settle funds, and manage payment infrastructure. As RM, you are the face of this relationship — accountable for its health, growth, and retention."},merchant:{title:"Merchant (your client)",text:"Middle Market businesses. They care about authorization rates, interchange costs, chargeback management, PCI compliance, and increasingly, integrated payments that connect to their own systems. Your job is to know their business well enough to show up as a strategic partner, not just a processor."}};
-function showEcoDetail(k){const box=document.getElementById('eco-detail-box');const d=ecoDetails[k];box.innerHTML='<div class="eco-detail-title">'+d.title+'</div><div class="eco-detail-text">'+d.text+'</div>';box.classList.add('visible');}
-
-// ── CONCEPTS ──
-const concepts=[
-  {term:"Interchange",cat:"pricing",tag:"Pricing & economics",def:"Fee paid from the merchant's bank (acquirer) to the cardholder's bank (issuer) on every card transaction. Set by card networks. Rates vary by card type, merchant category, and data submitted.",client:"Often the largest cost in a merchant's payment stack. Optimizing it is a key client value driver — a 10bps improvement on $10M/month volume = $10,000/month saved.",bridge:"Cost optimization through platform changes — the same P&L sensitivity conversation I had at Reflekt Me around conversion economics."},
-  {term:"Discount rate",cat:"pricing",tag:"Pricing & economics",def:"The total rate a merchant pays for card processing: interchange + acquirer markup + any additional fees. This is the 'all-in' rate on a merchant's statement.",client:"Merchants compare this rate across processors. It's the number they negotiate at re-contracting. Your job is to justify it with the value you deliver.",bridge:"I understand how platform fees compound at scale — the same sensitivity conversation around SaaS pricing at Reflekt Me."},
-  {term:"Interchange optimization",cat:"pricing",tag:"Pricing & economics",def:"Strategies to qualify transactions at lower interchange tiers — passing Level 2/3 data for B2B cards, optimizing transaction routing, reducing downgrades.",client:"Can meaningfully reduce processing costs for clients with high B2B or commercial card volume. Andrew described this as a Payment Explorer finding opportunity.",bridge:"Data-driven optimization is core to my background — I look for levers others miss and quantify them in client terms."},
-  {term:"Basis points (bps)",cat:"pricing",tag:"Pricing & economics",def:"1/100th of a percent. All pricing and rate changes in payments are discussed in basis points. 25bps = 0.25%. 100bps = 1%.",client:"Small rate changes have large dollar impacts at Middle Market volume. Always convert bps to dollars before the client conversation.",bridge:"I understand how marginal differences compound at scale — essential to the Middle Market pricing conversation."},
-  {term:"Authorization rate",cat:"performance",tag:"Transaction performance",def:"Percentage of attempted transactions successfully approved by the issuing bank. Critical performance KPI for every merchant.",client:"A 1-2% improvement can mean millions in recovered revenue at scale. Andrew described this as his primary Payment Explorer metric.",bridge:"Directly analogous to conversion rate optimization at Reflekt Me — I improved add-to-cart rates by identifying and removing transaction friction."},
-  {term:"Decline rate",cat:"performance",tag:"Transaction performance",def:"% of transactions declined — split between hard declines (fraud/invalid — do not retry) and soft declines (temporary — retry is possible).",client:"High decline rates cost merchants revenue and create customer friction. Diagnosing the hard/soft split determines the right intervention.",bridge:"Root cause analysis across complex systems is my pattern — same approach I used at SNHU and FSU to identify service breakdown points."},
-  {term:"Chargeback",cat:"performance",tag:"Transaction performance",def:"A transaction reversal initiated by the cardholder through their issuing bank. The merchant pays a per-chargeback fee and must defend the transaction to recover funds.",client:"High chargeback ratios trigger card network penalties. Andrew described a real card testing scenario where speed of response protected both JPMorgan and the client.",bridge:"SLA escalation management at Reflekt Me — I built the documentation and response timeline discipline Andrew described."},
-  {term:"Chargeback ratio",cat:"performance",tag:"Transaction performance",def:"Percentage of transactions that result in chargebacks. Visa's threshold is 1.0%; exceeding it triggers the Visa Dispute Monitoring Program (VDMP) with escalating penalties.",client:"Monitoring this monthly in Payment Explorer and alerting clients early is a key RM responsibility. Never let a client find out they're in a network monitoring program from anyone other than you.",bridge:"I built monitoring frameworks at SNHU to track performance against institutional thresholds and trigger corrective action before consequences materialized."},
-  {term:"Card-present (CP)",cat:"environment",tag:"Transaction environment",def:"Transaction where the physical card is used at a terminal — chip, tap-to-pay, magnetic swipe. Card and cardholder physically present at point of sale.",client:"Lower fraud risk = lower interchange rates. Middle Market clients with retail or hospitality locations benefit from maximizing CP volume.",bridge:"Physical vs. digital channel tradeoffs — I understand how transaction environment affects both risk pricing and operational complexity."},
-  {term:"Card-not-present (CNP)",cat:"environment",tag:"Transaction environment",def:"Transaction where card details are entered remotely — e-commerce, phone, recurring billing. No physical card present.",client:"Higher fraud risk = higher rates + more fraud management complexity. Insurance clients (Andrew's vertical) are almost entirely CNP — recurring premium payments.",bridge:"My Reflekt Me work was entirely CNP e-commerce — I understand the conversion, fraud, and user experience dynamics well."},
-  {term:"Integrated payments",cat:"environment",tag:"Transaction environment",def:"Payment processing embedded directly into a merchant's own software — ERP, POS, CRM — rather than a separate terminal or gateway.",client:"Reduces reconciliation friction, improves data quality, increases switching costs. Andrew confirmed this is a growing area for Middle Market clients.",bridge:"Product integration is my core skill — I built and managed platform integrations at Reflekt Me across complex client tech stacks."},
-  {term:"Omnichannel payments",cat:"environment",tag:"Transaction environment",def:"Unified payment experience and reporting across all channels — in-store, online, mobile, phone — with consolidated transaction data.",client:"Middle Market clients with multiple channels need unified reporting and consistent reconciliation. Increasingly table-stakes.",bridge:"Platform consistency across user touchpoints was central to my UX and product strategy work."},
-  {term:"PCI-DSS",cat:"compliance",tag:"Compliance & security",def:"Payment Card Industry Data Security Standard — compliance framework all merchants must meet. Requirements vary by transaction volume (SAQ levels).",client:"Non-compliance triggers fines and reputational risk. RMs who help clients navigate PCI certification build credibility and deepen the relationship.",bridge:"Compliance frameworks and audit readiness — same discipline as accreditation standards management in higher education."},
-  {term:"Tokenization",cat:"compliance",tag:"Compliance & security",def:"Replacing sensitive card data with a non-sensitive token for storage and transmission. Token has no value outside the issuing system.",client:"Reduces PCI compliance scope and fraud risk. Increasingly expected by enterprise clients as a baseline security practice.",bridge:"Data abstraction for security — I worked on platform data architecture at Reflekt Me, understanding how to isolate sensitive data flows."},
-  {term:"3D Secure (3DS)",cat:"compliance",tag:"Compliance & security",def:"Authentication protocol adding a verification step for online (CNP) transactions — one-time passcode or bank app authentication — to reduce fraud and shift liability.",client:"Reduces CNP fraud liability for merchants. Required in some international markets. The UX tradeoff (added friction vs. fraud prevention) is a real client conversation.",bridge:"Authentication friction tradeoffs are a core UX design consideration I've navigated — adding security steps can hurt conversion, finding the balance requires data."},
-  {term:"QBR",cat:"client",tag:"Client management",def:"Quarterly Business Review — structured executive meeting where the RM presents performance data, trend analysis, and strategic recommendations to key client stakeholders.",client:"The primary formal touchpoint for demonstrating RM value. Andrew said there's nothing better than crushing a QBR. Clients who receive genuine insight — not just reporting — renew and expand.",bridge:"I ran QBR-equivalent executive reviews at SNHU — presenting performance analytics, identifying risks, making recommendations, and taking action items cleanly."},
-  {term:"Re-contracting",cat:"client",tag:"Client management",def:"Renewing or restructuring a client's payment processing agreement — updated rates, revised product scope, or new terms — at the end of a contract term.",client:"Core revenue defense activity. Losing a re-contracting is expensive. The RM who shows up to re-contracting with a track record of proactive value delivery wins.",bridge:"Retention strategy is embedded in my background — client retention at Reflekt Me, student persistence at FSU. The dynamic is the same: demonstrate value before the renewal moment."},
-  {term:"Book of business",cat:"client",tag:"Client management",def:"The full portfolio of client relationships an RM is accountable for — measured by number of accounts, total processing volume, and total net revenue.",client:"RMs are evaluated on the health and growth of their book — retention rate, net revenue growth, and cross-sell penetration across the portfolio.",bridge:"I managed program portfolios at FSU (5,000+ students) and client portfolios at Reflekt Me — portfolio-level accountability with aggregate outcome responsibility."},
-  {term:"Net revenue",cat:"client",tag:"Client management",def:"Revenue after interchange costs and other direct processing expenses — what JPMorgan actually earns from a client relationship. The basis for the annual revenue plan.",client:"RMs are accountable for margin, not just volume. Understanding the cost structure and how client behavior affects net revenue is essential for smart prioritization.",bridge:"I oversaw $2M+ in budgets at FSU with accountability for resource-to-outcome alignment. P&L discipline — knowing revenue vs. profit — is familiar territory."}
-];
-let currentFilter='all';
-function filterConcepts(cat,btn){currentFilter=cat;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderConcepts();}
-function renderConcepts(){const list=document.getElementById('concepts-list');const catTagMap={pricing:'tag-amber',performance:'tag-teal',environment:'tag-blue',compliance:'tag-purple',client:'tag-coral'};const filtered=currentFilter==='all'?concepts:concepts.filter(c=>c.cat===currentFilter);list.innerHTML=filtered.map((c,i)=>`<div class="concept-card" data-cat="${c.cat}"><span class="tag ${catTagMap[c.cat]}">${c.tag}</span><div class="concept-term">${c.term}</div><div class="concept-def">${c.def}</div><button class="concept-expand" onclick="toggleConcept(this)">Show client impact & your bridge ↓</button><div class="concept-extra"><div class="mini-label" style="margin-bottom:5px;">Why it matters to clients</div><div class="client-box">${c.client}</div><div class="mini-label" style="margin-bottom:5px;">Your bridge</div><div class="bridge-box">${c.bridge}</div></div></div>`).join('');}
-function toggleConcept(btn){const extra=btn.nextElementSibling;const open=extra.classList.toggle('open');btn.textContent=open?'Hide ↑':'Show client impact & your bridge ↓';}
-
-// ── FLASHCARDS ──
-let fcIndex=0,fcArr=[...Array(concepts.length).keys()],fcFlipped=false;
-function renderFC(){const c=concepts[fcArr[fcIndex]];document.getElementById('fc-cat').textContent=c.tag;document.getElementById('fc-term').textContent=c.term;document.getElementById('fc-def').textContent=c.def;document.getElementById('fc-back-cat').textContent=c.tag;document.getElementById('fc-bridge').textContent=c.bridge;document.getElementById('fc-counter').textContent=(fcIndex+1)+' of '+concepts.length;document.getElementById('fc-bar').style.width=((fcIndex+1)/concepts.length*100)+'%';document.getElementById('fc-wrap').classList.remove('flipped');fcFlipped=false;}
-function flipFC(){fcFlipped=!fcFlipped;document.getElementById('fc-wrap').classList.toggle('flipped',fcFlipped);}
-function fcNav(dir){fcIndex=(fcIndex+dir+concepts.length)%concepts.length;renderFC();}
-function shuffleFC(){for(let i=fcArr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[fcArr[i],fcArr[j]]=[fcArr[j],fcArr[i]];}fcIndex=0;renderFC();}
-
-// ── STATEMENT ──
-let activeAnn=null;
-function showAnnotation(id){const box=document.getElementById('ann-'+id);if(activeAnn&&activeAnn!==box){activeAnn.classList.remove('visible');}if(box.classList.contains('visible')){box.classList.remove('visible');activeAnn=null;}else{box.classList.add('visible');activeAnn=box;}}
-
-// ── QUIZ ──
-const quizData=[
-  {q:"JPMorgan's role in every card transaction is:",opts:["Issuing bank — they issued the card","Card network — they set interchange rules","Acquiring bank — they process transactions on behalf of the merchant","A technology provider only"],ans:2,exp:"JPMorgan is the acquiring bank and processor — settling funds on behalf of merchants. As RM, you are the face of that acquiring relationship."},
-  {q:"A merchant's authorization rate drops 2% month-over-month. What's the right response?",opts:["Wait to see if it corrects itself next month","Immediately quantify the dollar impact and call the client proactively — don't wait for them to notice","Flag it internally and let the technical team handle it","Mention it at the next scheduled QBR"],ans:1,exp:"Andrew was explicit: proactive outreach when you spot a Payment Explorer anomaly is how RMs demonstrate value. A 2% auth rate drop on Middle Market volume = significant lost revenue. Call first."},
-  {q:"What is the difference between a hard decline and a soft decline?",opts:["Hard declines are from debit cards; soft declines are from credit cards","Hard declines are permanent (fraud/invalid card — do not retry); soft declines are temporary (insufficient funds — retry is possible)","Hard declines trigger chargeback fees; soft declines do not","There is no meaningful operational difference"],ans:1,exp:"The hard/soft split determines the right intervention. Soft declines are recoverable — a good retry strategy can recover 20-40% of them. Hard declines need a different approach entirely."},
-  {q:"A client asks why they pay more for online transactions than in-store. The correct explanation is:",opts:["Online transactions use newer infrastructure that costs more","Card-not-present carries higher fraud risk than card-present — that risk differential is reflected in interchange rates","The client is on an old pricing plan","Online transactions involve more network hops"],ans:1,exp:"CP vs. CNP is fundamental. Fraud risk differential drives the pricing differential. Andrew's insurance clients are almost entirely CNP — this conversation is essential to know cold."},
-  {q:"Andrew reviews Payment Explorer once a month. What is he primarily looking for?",opts:["Total processing volume to report to leadership","Authorization rate trends, avoidable fees, and chargeback ratios — to proactively identify issues before clients notice them","Competitor pricing to benchmark against","Client satisfaction scores"],ans:1,exp:"Andrew said: 'If I see something I always reach out to my clients proactively.' The monthly Payment Explorer review is the consultative practice that separates reactive RMs from strategic ones."},
-  {q:"When a client goes hard down at 3 AM, what is the correct morning response?",opts:["Respond during normal business hours — overnight issues are handled by the technical team","First thing in the morning: respond to the client immediately, route to the right internal support team, document a timeline, and brief your manager","Schedule a call for later that day to fully understand the issue first","Escalate to leadership before contacting the client"],ans:1,exp:"Andrew was direct: 'First thing in the morning, first thing you do — you've got to jump on it.' Client communication comes first, then internal routing. Timeline documentation protects everyone."},
-  {q:"Passing Level 3 data instead of Level 2 data on B2B commercial card transactions typically results in:",opts:["Higher interchange rates due to increased data complexity","Lower interchange rates — more detailed data qualifies transactions for preferred pricing","No change in interchange — data level only affects fraud scoring","A PCI compliance requirement, not an interchange benefit"],ans:1,exp:"Level 3 data (line-item detail, freight, duty) can reduce commercial interchange rates by 50-60bps — significant at scale. On $10M/month in commercial card volume, that's $50,000-60,000/month in client savings. This is the optimization conversation Andrew described."},
-  {q:"Andrew described the client relationship as: 'the client passes you the ball.' What does this mean operationally?",opts:["The client always sets the agenda for every meeting","Your job is to know immediately whether to route an issue to internal support teams or handle it as a business/relationship matter yourself","You should defer all client decisions to your manager","Client issues are always technical and should go directly to the technical team"],ans:1,exp:"Andrew's clearest framing of the role: know where to route the ball. Technical issue → technical priority support. Contract/business question → you run with it. Knowing the difference, quickly, is the core skill that develops over time."},
-  {q:"Why is the insurance vertical currently more cost-conscious than usual?",opts:["Insurance companies are preparing for regulatory changes","Inflation, rising litigation costs, tariff impacts on auto parts, and reinsurance cost increases are all compressing margins simultaneously","Insurance is always highly cost-conscious — nothing has changed","The insurance sector is growing rapidly and investing in new technology"],ans:1,exp:"Andrew described this directly. The macro pressures on insurance margins make every basis point of interchange optimization meaningful. Knowing this lets you walk into a client meeting and connect payment cost optimization to their broader business pressure — that's the industry intelligence move Andrew described."},
-  {q:"What goes in Salesforce vs. the client open items Excel?",opts:["Everything goes in Salesforce — it's the single system of record","Open items Excel: all client management items. Salesforce: formal revenue opportunities only — things that will generate income for JPMorgan if they close","Open items Excel: completed items. Salesforce: open items only","There is no distinction — use whichever you prefer"],ans:1,exp:"Andrew was specific: Salesforce is for formal revenue opportunities. The client Excel is your personal management system for everything — service issues, report requests, action items, relationship notes. Both matter; they serve different purposes."}
-];
-let qIdx=0,qScore=0,qAnswered=false,qShuffled=[];
-function startQuiz(){document.getElementById('quiz-start-screen').classList.add('hidden');document.getElementById('quiz-main-screen').classList.remove('hidden');qShuffled=[...quizData].sort(()=>Math.random()-.5);qIdx=0;qScore=0;renderQ();}
-function renderQ(){qAnswered=false;const q=qShuffled[qIdx];document.getElementById('q-prog').style.width=(qIdx/qShuffled.length*100)+'%';document.getElementById('q-num').textContent='Question '+(qIdx+1)+' of '+qShuffled.length;document.getElementById('q-text').textContent=q.q;document.getElementById('q-feedback').style.display='none';document.getElementById('q-next').classList.add('hidden');document.getElementById('q-opts').innerHTML=q.opts.map((o,i)=>`<button class="quiz-opt" onclick="answer(${i})">${o}</button>`).join('');}
-function answer(i){if(qAnswered)return;qAnswered=true;const q=qShuffled[qIdx];document.querySelectorAll('.quiz-opt').forEach(b=>b.disabled=true);document.querySelectorAll('.quiz-opt')[q.ans].classList.add('correct');const correct=i===q.ans;if(!correct)document.querySelectorAll('.quiz-opt')[i].classList.add('wrong');if(correct)qScore++;const fb=document.getElementById('q-feedback');fb.style.display='block';fb.className='quiz-feedback '+(correct?'correct':'wrong');fb.textContent=(correct?'✓ Correct. ':'✗ Not quite. ')+q.exp;document.getElementById('q-next').classList.remove('hidden');}
-function nextQ(){qIdx++;if(qIdx>=qShuffled.length){document.getElementById('quiz-main-screen').classList.add('hidden');document.getElementById('quiz-done-screen').classList.remove('hidden');document.getElementById('q-score').textContent=qScore+'/'+qShuffled.length;const p=qScore/qShuffled.length;document.getElementById('q-msg').textContent=p<.6?'Keep reviewing — revisit the core sections and try again.':p<.8?'Good foundation. Review the concepts you missed.':p<.9?'Strong. You are showing real domain fluency.':'Excellent. You are ready for these conversations.';}else{renderQ();}}
-function restartQuiz(){document.getElementById('quiz-done-screen').classList.add('hidden');document.getElementById('quiz-start-screen').classList.remove('hidden');}
-
-// ── SCENARIOS ──
-const scenarios=[
-  {type:"fire",typeLabel:"🔥 Fire drill",title:"Client goes hard down — 3 AM email",hook:"Your insurance client sends a panic email at 3 AM. Payment processing is completely down.",situation:"You wake up to an email: 'Gerald — we are hard down. Payments have been failing since 2 AM. We need this resolved immediately.' It's 6:30 AM.",andrew:"Andrew said: 'It's perfectly fine if you don't get that at 3 AM — you're sleeping. But in the morning, first thing you do, you've got to jump on it.'",actions:["Respond to the client immediately — acknowledge receipt, confirm you are actively working it, give a realistic next-touchpoint time (30 min)","Identify the right internal team: technical platform issue (technical priority support) or processing/connectivity issue (account management support)?","Pass the ball to the right internal team with full context — client name, issue description, time it started, revenue impact if known","Document a timeline as you go: when you saw it, when you responded, when you engaged internal team, when resolution began","Keep the client updated proactively — don't make them chase you for status","Brief your manager once the situation is stabilizing — before the client escalates above you"],bridge:"At Reflekt Me, I managed SLA escalation protocols for enterprise clients — uptime failures triggered a documented response process. I built the timeline-documentation discipline Andrew described. At FSU, student crisis response had the same structure: acknowledge fast, route to the right resource, document every action.",pitfall:"Do NOT try to resolve technical issues yourself or promise timelines you can't control. Your job is to own the client communication and coordinate the right internal resources — not to be the technical fix."},
-  {type:"fire",typeLabel:"🔥 Fire drill",title:"Card testing attack",hook:"Your client's account is being hit with a card testing attack. Brand fines are coming if you don't act fast.",situation:"Your client calls: 'We're seeing thousands of small-dollar transactions in the last hour — it looks like fraud.' You recognize this as card testing immediately.",andrew:"Andrew said: 'If we don't address it right away, we give the client room to say, well, you didn't act right away. The speediness and the pressure of making sure we're documenting a timeline — so leadership knows we did everything we were supposed to do.'",actions:["Acknowledge the severity immediately — this is a high-priority fire, not a routine request","Engage JPMorgan's fraud and risk team immediately — this is their ball, but you're the coordinator","Start your documentation timeline right now: time of client call, time you engaged fraud team, actions at each step","Brief your manager in parallel — card testing with brand fine exposure is leadership-level visibility","Communicate proactively to the client at every step — even 'here's what we've done so far'","Once resolved, prepare a post-incident summary — this protects JPMorgan if the client tries to shift responsibility for brand fines"],bridge:"At Reflekt Me, I managed incident response including root cause analysis and remediation tracking. The discipline of documenting 'what happened, when, who did what, and the outcome' is exactly what I built into our SLA framework.",pitfall:"Brand fines are the client's responsibility — but if JPMorgan is slow, the client will argue otherwise. Speed + documentation is your protection."},
-  {type:"data",typeLabel:"📊 Data review",title:"Monthly Payment Explorer — proactive outreach",hook:"You spot an avoidable fee pattern and auth rate drop in Payment Explorer.",situation:"Monthly review: one of your insurance clients has an authorization rate down 1.8% month-over-month and an assessment fee pattern that looks avoidable based on how they're submitting transaction data.",andrew:"Andrew said: 'I go into Payment Explorer once a month. If I see something I always reach out to my clients proactively. That's how you show value.'",actions:["Quantify the impact before you call: 1.8% auth rate drop × their volume = $X in lost revenue per month — have this number","Identify the avoidable fee: what's causing it? Level 2/3 data gap? Transaction routing issue?","Draft your outreach — lead with the insight: 'I was reviewing your account and spotted something that could recover meaningful revenue'","Schedule a call — don't bury this in an email","If it requires an internal technical fix, coordinate with the right team before the call so you show up with a solution, not just a diagnosis","Document the outreach and outcome in Salesforce as a revenue opportunity"],bridge:"This is exactly what I built at SNHU — monthly dashboard reviews to identify anomalies, then proactive stakeholder outreach with a recommendation. Andrew confirmed: the RMs who do this proactively are the ones clients trust.",pitfall:"Don't just flag the problem — show up with a recommendation. 'I see an issue' is a service call. 'I see an issue and here's how we fix it' is consulting."},
-  {type:"brand",typeLabel:"📋 Brand release",title:"April brand release — communicating client impact",hook:"The Visa April release drops. You have 3 clients, each impacted differently.",situation:"The release includes: (1) interchange increase for CNP transactions over $500, (2) assessment fee criteria change — now triggered by authorizations not settled transactions, (3) new Level 3 data requirement for commercial cards above $1,000.",andrew:"Andrew said: 'Twice a year, Visa and Mastercard release updates. Every year it's different, so we're all picking up the pieces. You want to make sure you're communicating the impact to each client.'",actions:["Get the internal analysis first — JPMorgan's team maps brand releases to your client portfolio. Find out which clients are impacted and how","For each client, translate the change into dollar impact: 'This will increase your monthly costs by approximately $X'","Prioritize: clients with highest cost impact hear from you first, before the change takes effect","Frame the conversation as proactive advisory — 'I wanted to get ahead of this with you before it hits your statements'","For the Level 3 requirement: identify whether the client passes that data currently. If not, compliance + optimization is a dual win","Document all communications in Salesforce"],bridge:"In higher education, regulatory and policy changes required the same discipline: understand the change, assess impact, communicate before it becomes a problem. The brand release cycle is the payments equivalent.",pitfall:"Don't let clients discover brand release impacts on their statements without warning. That's a trust failure — even when the news is a cost increase."},
-  {type:"internal",typeLabel:"🔗 Internal nav",title:"Client needs a report — who do you call?",hook:"Your client needs a custom transaction report by Friday. You're new. You don't know who pulls these.",situation:"Client emails Tuesday: 'We need a Q1 CNP reconciliation report for all transactions over $10K, broken out by card type, by Friday.' It's Tuesday. You don't know who owns this internally.",andrew:"Andrew said: 'Your success at JPMorgan is mostly about understanding who the folks are — getting to meet as many people as possible. In the beginning you'll say I don't even know where to go. That's normal.'",actions:["Respond to the client within the hour — acknowledge the request, confirm Friday deadline, tell them you're on it","Go to your manager or Andrew immediately: 'I have a client needing a Q1 CNP reconciliation report by Friday — who owns custom reporting requests?'","Once you have the right contact, route with full context: client name, exact spec, deadline, and why it matters","Follow up with that internal contact same day — don't assume it's being worked","Keep the client updated — by Wednesday, confirm you're on track for Friday","Add this contact to your internal network log — next time you know exactly who to call"],bridge:"At SNHU and FSU I constantly operated across units where I didn't directly control the output — I had to know who owned what and get things done through influence. At Reflekt Me I coordinated across engineering, design, and operations for client deliverables I didn't personally build.",pitfall:"Never tell a client you don't know who handles something. Tell them you're on it and find out. The difference between a new RM who looks competent and one who doesn't is almost entirely how they manage client communication while figuring things out internally."},
-  {type:"qbr",typeLabel:"📈 QBR",title:"Preparing and delivering your first QBR",hook:"Three weeks until your first QBR with a major insurance client.",situation:"You've inherited this client. It's your first QBR with them. The previous RM left detailed notes. Auth rate has been stable, but you've found an avoidable fee opportunity in Payment Explorer. You want to come in strong.",andrew:"Andrew said: 'There is nothing better than coming out of a QBR and just crushing it. Go in and do your best — be yourself. They understand you're new. Your demeanor will carry you.'",actions:["Use LLMs to brief yourself on the client's industry: recent insurance sector news — tariffs, litigation costs, inflation pressures","Pull Payment Explorer data for the quarter: auth rate trend, fee analysis, volume trends","Build your slide narrative: Performance → what's working → what we spotted → what we recommend → what's next","Lead with the avoidable fee insight — it shows you're looking out for them, not just reporting","Ask the client to add agenda items: 'Is there anything you'd like to make sure we cover?'","Prepare for questions you can't answer: 'Great question — let me take that as an action item and get back to you by [date]'","Review open items log before the meeting — close out resolved items, be ready to discuss open ones"],bridge:"I ran executive-level performance reviews at SNHU — presenting platform analytics, identifying risks, making recommendations, and inviting stakeholder input on the agenda. Andrew confirmed: demeanor and intent carry you through early QBRs. The data is the tool; the relationship is the product.",pitfall:"Don't try to be the expert you're not yet. What clients won't forgive is coming in unprepared or not following up on action items. Preparation + follow-through = trust."},
-  {type:"client",typeLabel:"🤝 Client dynamics",title:"Client is frustrated and pushing back on JPMorgan",hook:"Your client is venting hard about a service failure. It feels personal.",situation:"On a check-in call, the client's treasurer says: 'Frankly Gerald, we've had three incidents this quarter, response times have been unacceptable, and I'm starting to question whether JPMorgan is the right partner.' Your instinct is to get defensive.",andrew:"Andrew said: 'We own the relationship — so anything they say against JPMorgan, you'll take it personally. It's a natural instinct. But it's not you — clients just sometimes get frustrated. It's a battle with yourself. Take a deep breath.'",actions:["Do not get defensive — take a breath, let them finish, acknowledge the frustration before anything else","'You're right to bring this to me directly, and I hear you. Three incidents in a quarter is not acceptable and I understand why you're questioning this.'","Separate the emotion from the problem: once they feel heard, pivot to solutions — 'Let me walk you through what we've done and what we're putting in place'","Pull your incident timeline documentation — this is why Andrew emphasized documenting everything","Commit to a specific improvement: 'Here's what I'm putting in place for escalation response on your account going forward'","Follow up in writing after the call — summarize what you committed to and by when","Brief your manager — a client questioning the partnership needs leadership visibility"],bridge:"Managing frustrated institutional stakeholders was constant at FSU. The skill is the same: let them feel heard before you defend or explain. At Reflekt Me, client frustration was often about service gaps I didn't cause but owned as the primary contact — owning the relationship means owning the outcome.",pitfall:"The worst response to client frustration is defensiveness or minimizing. Andrew was clear: the battle is with yourself. Win that battle first."},
-  {type:"internal",typeLabel:"🔗 Internal nav",title:"Managing your open items log",hook:"Three clients, 12 open items, two calls today. How do you show up prepared?",situation:"Monday morning. Calls with two clients today, a brand release coming next week. 12 open items across your book — report requests, a technical escalation, two revenue conversations you've been meaning to initiate.",andrew:"Andrew said: 'Get an Excel for each client — here's my open items list. Same Excel, add a tab for revenue opportunities — selfishly tracking the stuff you want to talk about to win business.'",actions:["Open your client Excel before every call — review all open items, note which are closed, prep what to discuss on each open one","Triage by urgency and revenue impact: the technical escalation takes priority over report requests","Your revenue opportunity tab is your proactive agenda — before the call, pick one item to advance","During the call: open with their open items first, then transition to your agenda","Add every new item from the call before you hang up — memory is unreliable","Log any formal revenue opportunity in Salesforce same day — this is a mandate","End every call with a clear recap: 'On our end, we're handling X. On your end, you're getting us Y by Thursday. Does that sound right?'"],bridge:"At SNHU I built cross-functional systems to manage product backlogs — prioritizing by user impact, business value, and feasibility. Same triage logic Andrew described. At FSU I tracked student touchpoints systematically. The discipline of 'document as you go, never let an item go dark' is already how I operate.",pitfall:"Letting open items go dark is a trust-killer. Clients notice when you don't follow up."},
-
-  {type:"revenue",typeLabel:"💰 Revenue growth",title:"Re-contracting a client who's threatening to leave",hook:"A major client's contract is up in 60 days. They've been talking to Fiserv. The banker just tipped you off.",situation:"Your commercial banker calls: 'Heads up — I was in a meeting with the CFO and she mentioned they've been getting pitches from Fiserv. Contract expires in 60 days. You should get ahead of this.' This client represents $400K in annual net revenue to your book.",source:"From the JP Morgan RM role description: 'Achieve profitability goals through strategic client management and re-contracting of existing business.' Re-contracting is one of the highest-stakes RM responsibilities — losing it is expensive and visible.",actions:["Thank the banker immediately and schedule a joint debrief — this is the banker relationship paying off exactly as Andrew described","Pull the client's full Payment Explorer history for the last 12 months — what value have you delivered? Auth rate improvements? Fee savings? Incident resolutions?","Identify 2-3 concrete wins you can quantify in dollar terms before your next meeting","Request a meeting with the CFO and Treasurer — frame it as a strategic review, not a sales call: 'We're coming up on our anniversary and I want to make sure we're maximizing the value of this relationship'","In the meeting, lead with what you've delivered, not what JPMorgan offers. 'Here's what we've done for you this year — here's the dollar value.'","Understand what Fiserv is pitching — it's almost certainly price. Your defense is breadth: bank integration, treasury relationship, Payment Explorer insight, dedicated RM model","Loop in your manager before the meeting — re-contracting at this revenue level needs visibility","After the meeting, send a formal proposal with updated terms and a clear value summary"],bridge:"Retention strategy is embedded in how I've operated throughout my career. At Reflekt Me, every client relationship had a renewal inflection point — I learned that the best retention conversations happen before the client is in active evaluation mode. At FSU, student persistence efforts worked the same way: intervene early, show value before the attrition moment.",pitfall:"Don't lead with price concessions. If you open by dropping rates, you signal that your original pricing was inflated and you train the client to threaten to leave every renewal. Lead with value delivered, then negotiate from strength."},
-
-  {type:"revenue",typeLabel:"💰 Revenue growth",title:"Cross-selling Treasury Services to an existing merchant client",hook:"Your insurance client mentions they're frustrated with their wire transfer process at another bank. That's a Treasury Services opening.",situation:"On a monthly check-in call, your treasury contact at the client says, almost in passing: 'Our wire operations are a mess — we're still using [Other Bank] for most of our treasury and the reconciliation is painful.' You recognize this as a live cross-sell opportunity for JPMorgan Treasury Services.",source:"The JPM RM role description explicitly requires: 'Execute sales/support strategies in conjunction with JPMorgan Payments Treasury Services, FX and Card Services.' Andrew said: 'The bankers and treasuries — they impact each other's revenue and their relationship.' This is the cross-sell motion in action.",actions:["Don't try to sell Treasury Services yourself — that's not your lane. Your job is to surface the opportunity and route it.","Respond to the client warmly but don't oversell: 'That's actually an area JPMorgan has significant capability in — would it be useful for me to bring in our Treasury team to walk you through what that could look like?'","Immediately after the call, contact your Treasury Services rep: 'I have an insurance client expressing pain around wire operations and treasury reconciliation at [Other Bank]. Live opportunity — can we set up a joint call?'","Brief the TS rep fully before the call: client name, what they said, their current setup, who the decision-makers are","Attend the joint call — don't disappear. You're still the relationship owner.","Log the opportunity in Salesforce same day with full details","Update the commercial banker — they'll want to know a cross-sell is in motion"],bridge:"At Reflekt Me I identified expansion opportunities within existing client relationships constantly — spotting where our platform could solve a problem the client hadn't asked us to solve yet. At FSU I connected students to services they didn't know they needed by listening carefully in advising sessions. The skill is the same: hear the pain, connect the dots, route to the right resource.",pitfall:"Don't try to present Treasury Services yourself if you're not the expert. Clients will ask technical questions you can't answer, and you'll lose credibility. Your value here is recognizing the opportunity and making the introduction well — not being the product expert."},
-
-  {type:"fire",typeLabel:"🔥 Fire drill",title:"Client's chargeback ratio hits 0.85% — heading toward the Visa threshold",hook:"Your monthly Payment Explorer review shows a client's chargeback ratio has jumped from 0.4% to 0.85% in 60 days. The Visa threshold is 1.0%.",situation:"You pull Payment Explorer on a Thursday morning. A retail client's chargeback ratio has nearly doubled over two months — 0.4% in January, 0.65% in February, 0.85% in March. At this trajectory they hit 1.0% in 30 days. That triggers VDMP — Visa's Dispute Monitoring Program — with escalating fines and potential loss of processing rights.",source:"Industry data shows chargebacks are a major risk: fraud tools reduced industry chargebacks by 18% when properly deployed. Visa's VDMP threshold of 1.0% is the hard line that triggers formal penalties and RM accountability.",actions:["This is not a next-week conversation — call the client today. The trajectory is the problem, not just the current number.","Lead with the data: 'I was reviewing your account this morning and I'm seeing a chargeback pattern that needs our immediate attention. You're at 0.85% and the Visa threshold is 1%. I want to get ahead of this with you before it becomes a formal issue.'","Engage JPMorgan's risk and fraud team immediately — they own the chargeback mitigation toolkit: dispute management tools, fraud filters, retry logic adjustments","Diagnose the root cause with the client: Is it a product/service issue driving disputes? Friendly fraud (customers disputing legitimate charges)? A specific product line or time period?","Build a mitigation plan with clear actions and timelines — the client needs to see a response plan, not just the bad news","Document everything with timestamps — if Visa fines come, JPMorgan needs to show it acted promptly","Set a weekly monitoring cadence until the ratio is back below 0.5%","Brief your manager — chargeback threshold exposure is leadership-level visibility"],bridge:"Early alert systems at FSU worked on exactly this logic: identify the at-risk signal before the outcome occurs, intervene with a structured plan, monitor weekly. I didn't wait for a student to fail — I acted at the trend. Same discipline here: act at 0.85%, not 1.05%.",pitfall:"Don't wait until the client is in VDMP to have this conversation. By then you're in crisis mode, fines are accruing, and the client has every right to question why you didn't flag this earlier. The monthly Payment Explorer review exists precisely to catch this."},
-
-  {type:"client",typeLabel:"🤝 Client dynamics",title:"Onboarding a new client inherited from a departing RM",hook:"You've been assigned a portfolio from an RM who just left. Three clients — and you know almost nothing about them.",situation:"Your manager calls you in: 'We had an RM leave last week. You're taking on three of their clients — I'm sending you the files now. The biggest one has a QBR scheduled in 6 weeks and they don't know you yet.' You open the files: sparse notes, some open items, no context on the relationships.",source:"The JPM RM job description emphasizes 'maintaining strong relationships with key decision-makers' — when you inherit a portfolio, establishing that relationship quickly is your first job. Industry research shows merchants value a 'collaborative working approach throughout the organization' and smooth transitions.",actions:["Review every file thoroughly before making contact: open items log, prior QBR notes, payment performance history, any incident records","Ask your manager and the departing RM's colleagues: 'What do I need to know about each of these clients? Any sensitivities, active issues, or relationship dynamics?'","Make introductory calls within 48 hours of assignment — don't let a week go by with silence. 'Hi, I'm Gerald Mitchell, I've been assigned as your new Relationship Manager at JPMorgan. I wanted to introduce myself and make sure there's no gap in your service.'","In the first call: listen more than you talk. Ask them what's been working, what could be better, and what's most important to them right now.","Pull Payment Explorer data immediately — know their performance picture before you meet them","Close any outstanding open items in the first 30 days — showing you can deliver quickly builds trust faster than any introduction","Schedule an in-person or video meeting within the first month for your largest inherited client"],bridge:"Inheriting a complex stakeholder portfolio is something I've done directly. At FSU when I stepped into the Dean role, I inherited programs, relationships, and open issues from my predecessor. The discipline of 'understand before you act, deliver early, earn trust through follow-through' is exactly how I navigated that transition.",pitfall:"Don't bad-mouth or distance yourself from the previous RM, even if their notes were poor. The client liked them. Your job is continuity and improvement — not commentary on what was there before."},
-
-  {type:"data",typeLabel:"📊 Data review",title:"Client wants to expand to e-commerce — omnichannel conversation",hook:"A card-present retail client tells you they're launching online sales in Q3. This is a major payments architecture change — and a cross-sell opportunity.",situation:"Your retail client's VP of Treasury calls: 'We're launching our e-commerce store in Q3 — probably around $2M in online volume in year one. We've been talking to Stripe because it's easy to set up. What can JPMorgan offer?' This is both a retention risk and an expansion opportunity.",source:"JPMorgan's Helix platform offers full-stack omnichannel commerce — gateway, processing, terminals, fraud tools from one provider. Industry data shows over 65% of merchants have integrated omnichannel acquiring solutions. The JPM differentiator vs. Stripe is bank integration depth and unified reporting across in-store and online channels.",actions:["Don't try to out-feature Stripe on simplicity — you can't and shouldn't. Stripe is genuinely easy to set up for small volumes.","Your JPMorgan angle is integration and scale: 'The question isn't just which platform is easiest to launch — it's whether you want two separate payment relationships or a unified view across your in-store and online business.'","Quantify the benefit of unified reporting: 'Right now you have full visibility into your in-store payments. With JPMorgan e-commerce, that view extends online — one dashboard, one reconciliation, one RM.'","Loop in the technical team — e-commerce integration involves gateway setup, API connections, fraud tool configuration. You need the right internal resources on this.","Understand their tech stack before the conversation: What e-commerce platform are they using? Shopify? Custom? This affects integration complexity.","If Stripe is their preference for launch, don't fight it — ask: 'Would you be open to a conversation about a path to consolidating once you're past launch? I'd like to show you what that looks like.'","Log this as a Salesforce revenue opportunity immediately — $2M in new online volume is meaningful"],bridge:"Platform migration and integration strategy is core to my product background. At Reflekt Me, I helped enterprise retail clients evaluate and implement platform integrations constantly — understanding the client's tech stack, the integration complexity, and how to frame the business case for consolidation versus fragmentation. This is exactly that conversation.",pitfall:"Don't dismiss Stripe. Clients who feel talked down to about their technology choices become defensive. Acknowledge what Stripe does well, then position JPMorgan's differentiated value honestly. 'They're great for getting started — here's where JPMorgan adds value as you scale.'"},
-
-  {type:"brand",typeLabel:"📋 Brand release",title:"Visa interchange settlement — explaining a rate reduction to a client",hook:"The November 2025 Visa settlement reduced US credit interchange by 10 basis points. Your client just saw it on their statement and is asking what it means.",situation:"Your insurance client's assistant treasurer emails: 'We noticed our interchange costs were lower this month — about $8,000 less than normal. Is this a one-time thing or permanent? And what should we expect going forward?' This is a direct result of the November 2025 Visa settlement that capped rates for 5 years.",source:"In November 2025, Visa announced a revised settlement reducing US combined average effective credit interchange by 10 basis points for 5 years, with rate caps on standard consumer cards at 125 bps for 8 years. This is real, current news you can reference confidently.",actions:["Respond promptly — a client noticing a cost reduction is a positive touchpoint. Don't let it sit.","Explain what happened clearly: 'This is the result of the Visa interchange settlement that took effect recently — it reduced standard credit interchange rates by approximately 10 basis points. For your volume, that translates to roughly $8,000/month in savings.'","Confirm it's permanent for the settlement period: 'This rate reduction is locked in for 5 years under the settlement terms, so it's not a one-time adjustment.'","Use this as a proactive advisory moment: 'This is a good time for us to look at your full interchange profile — there may be additional optimization opportunities beyond the settlement impact.'","Frame JPMorgan's role positively: 'Part of my job is making sure you understand changes like this and how they affect your costs. I'll always flag these proactively.'","Log the touchpoint in your open items Excel as a completed value-add interaction"],bridge:"Translating regulatory or policy changes into plain-language client impact is something I've done at every stage of my career — at FSU with accreditation changes, at SNHU with platform policy updates. The discipline is: understand the change, quantify the impact for this specific client, communicate proactively, and use it as a relationship moment.",pitfall:"Don't let the client discover the savings without you explaining it first. If they noticed it on their own and call you to ask, you've missed a proactive value moment. Payment Explorer and brand release monitoring exist precisely so you can be first."},
-
-  {type:"client",typeLabel:"🤝 Client dynamics",title:"Client asks a technical question you can't answer",hook:"In a QBR, the client's IT director asks a deep technical question about API latency and gateway failover. You don't know the answer.",situation:"You're 30 minutes into a QBR that's going well. The client's Head of Technology joins the call and asks: 'We've been having intermittent timeout errors on your API endpoint during high-volume periods — around 8-9 PM on premium payment days. What's the root cause and what's your SLA for that?' You genuinely don't know the technical answer.",source:"Andrew said specifically: 'Your clients are going to ask hard questions. If you don't know the answer to something, you simply say — take a note, make it a takeaway.' This is a core RM skill: graceful acknowledgment without losing credibility.",actions:["Stay completely calm — do not guess or speculate on a technical answer you don't know. That's worse than not knowing.","'That's an important question and I want to make sure I give you an accurate answer rather than a guess. Let me take that as an action item and get you a definitive response by [specific date].'","Write it down visibly during the meeting — the client needs to see you capturing it","After the meeting, immediately route to your Technical CSM: 'I have a client reporting API timeout errors during high-volume windows around 8-9 PM. They want root cause and SLA response. Can we connect today?'","Respond to the client within 24 hours with a status update — even if the answer isn't ready yet: 'I've engaged our technical team and I'm expecting a full response by [date]'","When you deliver the answer, send it in writing with a clear explanation — and flag if there's a fix being implemented","Follow up after any fix to confirm it resolved the issue"],bridge:"'I don't know but I'll find out' is actually a trust-building statement when delivered with confidence and followed through on. I operated this way constantly at Reflekt Me — clients asked deep technical product questions I couldn't always answer on the spot. The discipline is: acknowledge honestly, set a clear expectation, deliver on time. Clients don't expect you to know everything. They expect you to get the answer.",pitfall:"Never guess on technical questions in front of a client. A confident wrong answer is far more damaging than an honest 'let me get you the right answer.' Andrew said this explicitly — take the note, make it a takeaway, follow through."}
-];
-let scenarioFilter='all';
-function renderScenarios(){const typeColors={fire:'#D85A30',data:'#1D9E75',brand:'#7F77DD',qbr:'#9A7B20',internal:'#378ADD',client:'#0F2545',revenue:'#C9A84C'};const container=document.getElementById('scenarios-list');const filterHTML=`<div class="filter-row"><button class="filter-btn ${scenarioFilter==='all'?'active':''}" onclick="filterScenarios('all')">All (${scenarios.length})</button><button class="filter-btn ${scenarioFilter==='fire'?'active':''}" onclick="filterScenarios('fire')">🔥 Fire drills</button><button class="filter-btn ${scenarioFilter==='data'?'active':''}" onclick="filterScenarios('data')">📊 Data reviews</button><button class="filter-btn ${scenarioFilter==='brand'?'active':''}" onclick="filterScenarios('brand')">📋 Brand releases</button><button class="filter-btn ${scenarioFilter==='qbr'?'active':''}" onclick="filterScenarios('qbr')">📈 QBR</button><button class="filter-btn ${scenarioFilter==='revenue'?'active':''}" onclick="filterScenarios('revenue')">💰 Revenue</button><button class="filter-btn ${scenarioFilter==='internal'?'active':''}" onclick="filterScenarios('internal')">🔗 Internal nav</button><button class="filter-btn ${scenarioFilter==='client'?'active':''}" onclick="filterScenarios('client')">🤝 Client dynamics</button></div>`;const filtered=scenarioFilter==='all'?scenarios:scenarios.filter(s=>s.type===scenarioFilter);const cardsHTML=filtered.map((s,i)=>`<div class="scenario-card" data-type="${s.type}" id="sc-${i}"><div class="scenario-header" onclick="toggleScenario('sc-${i}')"><div class="scenario-left"><div class="scenario-type-tag" style="color:${typeColors[s.type]};">${s.typeLabel}</div><div class="scenario-title">${s.title}</div><div class="scenario-hook">${s.hook}</div></div><svg class="scenario-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div><div class="scenario-body"><div class="scenario-section"><div class="scenario-section-label">The situation</div><div class="scenario-situation">${s.situation}</div></div><div class="scenario-section"><div class="scenario-section-label">Context & source</div><div class="scenario-andrew">${s.source||s.andrew}</div></div><div class="scenario-section"><div class="scenario-section-label">How to handle it</div><ul class="scenario-action-list">${s.actions.map(a=>`<li>${a}</li>`).join('')}</ul></div><div class="scenario-section"><div class="scenario-section-label">Your bridge</div><div class="scenario-bridge">${s.bridge}</div></div><div class="scenario-section"><div class="scenario-section-label">⚠ Watch out for</div><div class="scenario-pitfall">${s.pitfall}</div></div></div></div>`).join('');container.innerHTML=filterHTML+cardsHTML;}
-function filterScenarios(type){scenarioFilter=type;renderScenarios();}
-function toggleScenario(id){document.getElementById(id).classList.toggle('open');}
-
-// ── GLOSSARY ──
-const glossaryTerms=[
-  {term:"Hard down",def:"Client's payment processing is completely non-functional. The most urgent fire drill scenario — requires immediate response and internal escalation."},
-  {term:"Payment Explorer",def:"JPMorgan's internal analytics platform. RMs review it monthly to assess each client's authorization rate, avoidable fees, and chargeback ratio."},
-  {term:"Open items log",def:"Andrew's term for the client management Excel each RM maintains — a running list of all pending requests, issues, and action items per client."},
-  {term:"Book",def:"Short for 'book of business' — the full portfolio of clients an RM is responsible for managing and growing."},
-  {term:"Card testing",def:"A fraud pattern where bad actors run thousands of small-dollar transactions to test stolen card numbers. Creates chargeback exposure and potential brand fines if not addressed immediately."},
-  {term:"Brand release",def:"Visa and Mastercard's twice-yearly update cycle (April and October) releasing interchange changes, fee criteria updates, and new rules. Every RM must understand client impact."},
-  {term:"Brand fines",def:"Penalties assessed by Visa/Mastercard for violations — including high chargeback ratios, network rule violations, and non-compliance. Can be passed to merchants."},
-  {term:"Pass the ball",def:"Andrew's analogy for the RM role — the client hands you an issue, and your job is to know immediately whether to route it to a technical team or handle it yourself as a business matter."},
-  {term:"Technical priority support",def:"JPMorgan's internal team that handles platform and system-level technical issues for client accounts. One of the key internal contacts to establish early."},
-  {term:"Account management team",def:"The internal team that handles operational account requests — pulling reports, making account changes, processing service requests. Distinct from technical support."},
-  {term:"Technical CSM",def:"Technical Client Service Manager — JPMorgan's counterpart to the RM on the technology side. They own the tech relationship with the client's IT team; the RM owns the business relationship."},
-  {term:"QBR",def:"Quarterly Business Review — the formal executive meeting where the RM presents performance data and strategic recommendations. Andrew described it as the primary relationship proof moment."},
-  {term:"VDMP",def:"Visa Dispute Monitoring Program — triggered when a merchant's chargeback ratio exceeds 1.0%. Involves escalating fines and monitoring. A serious client health situation."},
-  {term:"Level 2/3 data",def:"Enhanced transaction data submitted with B2B commercial card transactions. Level 2 adds tax amount and customer code; Level 3 adds line-item detail. Passing this data qualifies merchants for lower interchange rates."},
-  {term:"Re-contracting",def:"The renewal process for a merchant's processing agreement. A high-stakes relationship moment where the RM must demonstrate clear value to retain the client and defend pricing."},
-  {term:"Salesforce",def:"JPMorgan's CRM for formal revenue opportunity tracking. Andrew described it as a mandate — any identified revenue opportunity must be logged. Separate from the personal open items Excel."},
-  {term:"Net revenue",def:"What JPMorgan actually earns from a client — revenue after interchange and direct processing costs. The basis for the RM's annual revenue plan."},
-  {term:"Blended rate",def:"The weighted average interchange rate across all card types a merchant processes. Shown on the merchant statement. Moving this rate lower is a core optimization goal."},
-  {term:"Effective rate",def:"Total fees as a percentage of total processing volume. Includes interchange + assessments + processing fees. The all-in cost rate clients care most about at re-contracting."},
-  {term:"MID",def:"Merchant Identification Number — the unique identifier for a merchant's processing account with JPMorgan. Every client has one (or multiple for different business lines)."}
-];
-function renderGlossary(){document.getElementById('glossary-render').innerHTML=`<div class="glossary-list">${glossaryTerms.map(g=>`<div class="glossary-item"><div class="glossary-term">${g.term}</div><div class="glossary-def">${g.def}</div></div>`).join('')}</div>`;}
-
-// ── CHECKLIST ──
-const checkItems=[
-  {title:"Know who you're meeting",detail:"RM/peer, exec, or partner? Pull the right question set from Smart Questions."},
-  {title:"Anchor the ecosystem",detail:"JPMorgan is the acquirer. You are the face of that relationship — not a vendor, a strategic partner."},
-  {title:"Pick 2-3 concepts to reference",detail:"Choose from Core Concepts most likely to come up. Have your bridge statement ready for each."},
-  {title:"Choose your bridge theme",detail:"Which of the 4 themes from Your Story is most relevant? Lead with that if asked to introduce yourself."},
-  {title:"Review any relevant BRM scenario",detail:"Did Andrew's conversation surface a scenario type relevant to this meeting? Review it in the Scenarios section."},
-  {title:"Prepare 2 smart questions",detail:"Select from Smart Questions. Internalize them — don't read from notes."},
-  {title:"Insurance industry brief (if applicable)",detail:"If meeting relates to Andrew's vertical: run a quick LLM brief on recent insurance industry news before the meeting."},
-  {title:"Ready your gap response",detail:"'I've been building domain fluency seriously — here's what I've learned and where I'm still developing.' Confidence + honesty."}
-];
-let checkState=checkItems.map(()=>false);
-function renderChecklist(){document.getElementById('checklist-items').innerHTML=checkItems.map((item,i)=>`<div class="check-item" onclick="toggleCheck(${i})"><div class="check-circle ${checkState[i]?'done':''}"><svg class="check-check" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div><div class="check-content"><div class="check-title ${checkState[i]?'done':''}">${item.title}</div><div class="check-detail ${checkState[i]?'done':''}">${item.detail}</div></div></div>`).join('');}
-function toggleCheck(i){checkState[i]=!checkState[i];renderChecklist();}
-function resetChecklist(){checkState=checkItems.map(()=>false);renderChecklist();}
-
-// ── NAV ──
-const viewTitles={ecosystem:'Payments Ecosystem',concepts:'Core Concepts',flashcards:'Flashcards',interchange:'Interchange Tables',explorer:'Payment Explorer',statement:'Statement Reader',quiz:'Knowledge Quiz',scenarios:'BRM Scenarios',daylife:'Day in the Life',banker:'Banker Triangle',insurance:'Insurance Vertical',salesforce:'Salesforce Workflow',story:'Your Story',questions:'Smart Questions',glossary:'JPMorgan Glossary',checklist:'Pre-Meeting Checklist',audio:'Audio / Video Player'};
-
-// ── AUDIO PLAYER ──
-function audioFileSelected(input) {
-  const file = input.files[0];
-  if (file) loadAudioFile(file);
-}
-function audioDragOver(e) {
-  e.preventDefault();
-  document.getElementById('audio-upload-zone').style.borderColor = 'var(--gold)';
-  document.getElementById('audio-upload-zone').style.background = '#f5e9c0';
-}
-function audioDrop(e) {
-  e.preventDefault();
-  document.getElementById('audio-upload-zone').style.borderColor = 'var(--border-gold)';
-  document.getElementById('audio-upload-zone').style.background = 'var(--gold-pale)';
-  const file = e.dataTransfer.files[0];
-  if (file) loadAudioFile(file);
-}
-function loadAudioFile(file) {
-  const maxSize = 500 * 1024 * 1024;
-  if (file.size > maxSize) {
-    showAudioError('File is too large. Please use a file under 500MB.');
-    return;
+const scenarios = [
+  {
+    title: "Cart Abandonment & Low Digital Conversion",
+    client: "Regional retail chain",
+    industry: "Retail / E-commerce",
+    icon: "🛒",
+    complexity: 3,
+    clientQuote: "Our web traffic is strong but checkout is broken. Is it a payments problem?",
+    realProblem: "They don't know where in the funnel friction lives. It could be payment failure rates, poor mobile UX, 3DS friction, or checkout design — not necessarily the payment rails themselves.",
+    steps: [
+      { title: "Diagnose before prescribing", desc: "Request authorization rate data, decline reason codes, cart abandonment by device, and payment method mix. You need to know where in the funnel customers are dropping.", terms: ["authorization rate", "decline codes", "soft decline vs hard decline", "payment method mix"] },
+      { title: "Map the checkout journey", desc: "Review mobile vs desktop conversion split. Assess 3D Secure (3DS2) friction — authentication challenges add drop-off. Check if guest checkout is available.", terms: ["3DS2", "authentication challenge rate", "frictionless flow", "PCI DSS scope"] },
+      { title: "Analyze payment method gaps", desc: "Determine if digital wallet options (Apple Pay, Google Pay) are enabled. Wallet payments reduce checkout fields from ~12 to 1 tap — major conversion lift for mobile.", terms: ["digital wallets", "one-click checkout", "tokenization", "card-on-file"] },
+      { title: "Coordinate solution delivery", desc: "Align with Chase's integration team, the client's dev team, and your risk partners. Frame recommendations around revenue impact, not features.", terms: ["payment gateway", "API integration", "sandbox testing", "revenue impact modeling"] },
+      { title: "Establish success metrics", desc: "Set baseline authorization rate and conversion rate. Define 90-day targets. Schedule a review checkpoint to demonstrate ROI.", terms: ["authorization rate improvement", "conversion lift", "basis points", "QBR"] }
+    ],
+    interviewPhrases: [
+      { label: "Opening move", text: "Before recommending anything, I'd want to see the authorization rate data and decline reason code breakdown. That tells us whether this is a payment issue or a checkout experience issue — they look the same on the surface but require completely different solutions." },
+      { label: "Value framing", text: "My role isn't to push products — it's to help this client understand where revenue is leaking and coordinate the right solution. Even a 2% lift in authorization rate on a $10M annual volume is meaningful." }
+    ],
+    traps: [{ label: "Don't do this", text: "Immediately recommend adding more payment methods before seeing the data. Clients can tell when you're selling rather than solving." }],
+    reframe: { wrong: "We offer digital wallets which can help with checkout.", better: "Based on your mobile traffic share, enabling Apple Pay and Google Pay alone typically drives 15–25% lift in mobile conversion — but let me confirm that hypothesis with your current data first." },
+    vpBridge: "Your journey mapping and analytics background is the differentiator here. Most BRMs wait for a client to complain. You'd proactively surface authorization rate trends in quarterly reviews and flag deterioration before the client notices."
+  },
+  {
+    title: "Rising Chargebacks & Dispute Escalation",
+    client: "Multi-location restaurant group",
+    industry: "Food & Beverage / Hospitality",
+    icon: "🧾",
+    complexity: 4,
+    clientQuote: "Our chargebacks are out of control and we're losing money. The bank isn't protecting us.",
+    realProblem: "Chargebacks typically stem from operational gaps — unclear descriptors, delivery app disputes, staff refund process failures, or authorization holds — not from the bank failing to protect them.",
+    steps: [
+      { title: "De-escalate and actively listen", desc: "Validate the frustration without being defensive. Gather specifics: chargeback rate, dispute categories (fraud vs. service disputes), and which locations are affected.", terms: ["chargeback ratio", "dispute category codes", "Reason Code 4853", "Reason Code 10.4"] },
+      { title: "Run a chargeback root cause analysis", desc: "Pull dispute data segmented by reason code, location, and channel. 'Merchandise not received' and 'service not as described' are operational — not fraud.", terms: ["reason codes", "friendly fraud", "first-party misuse", "retrieval request"] },
+      { title: "Assess authorization and settlement workflow", desc: "Check for pre-authorization practices, tip adjustment processes, and whether card-not-present (CNP) transactions are handled securely. Delivery platforms create CNP exposure.", terms: ["pre-authorization", "tip adjustment", "card-not-present (CNP)", "AVS", "CVV mismatch"] },
+      { title: "Review descriptor and receipt practices", desc: "Unclear billing descriptors drive consumer confusion chargebacks. Ensure receipts capture customer acknowledgment for high-value transactions.", terms: ["billing descriptor", "soft descriptor", "acquirer", "representment"] },
+      { title: "Build a dispute management process", desc: "Introduce chargeback representment for winnable disputes. Set a 1% chargeback ratio monitoring threshold. Train staff on refund-first protocols.", terms: ["chargeback representment", "1% chargeback ratio threshold", "excessive chargeback program", "refund-first protocol"] }
+    ],
+    interviewPhrases: [
+      { label: "De-escalation opener", text: "The first thing I'd do is just listen — understand the full picture from their perspective, validate that it's a real business problem, and then shift into diagnostic mode. Jumping straight to solutions before you understand the root cause usually makes things worse." },
+      { label: "Expertise signal", text: "I'd want to look at the dispute data segmented by reason code and channel. 'Chargebacks are rising' tells us very little — the reason codes tell us whether this is fraud exposure, operational process gaps, or delivery platform CNP risk. Each one has a different fix." }
+    ],
+    traps: [{ label: "Don't do this", text: "Get defensive about Chase's processes or blame the client immediately. You're on their side — your job is to be their internal advocate and fix the problem." }],
+    reframe: { wrong: "Chargebacks are part of doing business. Here's our dispute process.", better: "Your chargeback ratio is approaching a threshold that triggers additional scrutiny from the card networks. Let's fix the underlying causes now so you don't face additional fees or program enrollment down the road." },
+    vpBridge: "Your student affairs and operational leadership background is directly applicable. You've managed escalations where emotions are high and the facts are messy. That composure — listening first, diagnosing second, solving third — is exactly the pattern that retains clients in these moments."
+  },
+  {
+    title: "Scaling Payment Operations Across New Locations",
+    client: "Fast-growing franchise or multi-unit business",
+    industry: "Franchise / Multi-unit Retail",
+    icon: "🏪",
+    complexity: 4,
+    clientQuote: "We're opening 12 new locations this year. Our current payment setup won't scale and reporting is a mess.",
+    realProblem: "They need an integrated payment infrastructure, not just more terminals. The real pain is reconciliation complexity, inconsistent reporting across locations, and lack of a single operational view.",
+    steps: [
+      { title: "Understand current state completely", desc: "Map how they currently process payments across locations. What POS systems are in use? How do they reconcile? What does the reporting gap cost them in time?", terms: ["POS integration", "payment gateway", "reconciliation", "settlement reporting"] },
+      { title: "Identify integration architecture needs", desc: "Assess whether they need a unified payment gateway, a multi-location reporting dashboard, or a full POS migration. Enterprise clients often need omnichannel capability.", terms: ["omnichannel payments", "unified commerce", "gateway integration", "ERP integration"] },
+      { title: "Design for operational consistency", desc: "Recommend standardized hardware, software, and onboarding processes across all locations. Inconsistent setups create reconciliation nightmares and security exposure.", terms: ["hardware deployment", "P2PE (point-to-point encryption)", "tokenization", "PCI scope reduction"] },
+      { title: "Build a phased implementation roadmap", desc: "Sequence the rollout by risk and complexity. Pilot with 2–3 locations, validate reporting and reconciliation outputs, then scale. Protect their operations during transition.", terms: ["phased implementation", "parallel processing", "cutover plan", "go-live support"] },
+      { title: "Create ongoing governance and review", desc: "Establish monthly reporting reviews and quarterly business reviews (QBRs). Position yourself as the single point of accountability for their payment operations health.", terms: ["QBR (quarterly business review)", "portfolio management", "interchange optimization", "volume incentives"] }
+    ],
+    interviewPhrases: [
+      { label: "Discovery framing", text: "Before talking about solutions, I'd want to understand how their current reconciliation process works and where it breaks down. Scaling a broken process just creates bigger problems faster." },
+      { label: "Strategic positioning", text: "My goal here would be to position JPMorgan Chase as their long-term operational partner for payments — not just the company that processed their card transactions. That means proactively identifying what they'll need at 50 locations, not just solving for today's 20." }
+    ],
+    traps: [{ label: "Don't do this", text: "Lead with hardware and terminal counts. That turns this into a commodity conversation. The real value is in the operational infrastructure, reporting visibility, and integration work." }],
+    reframe: { wrong: "We can deploy terminals to all your new locations quickly.", better: "Let's design a payment infrastructure that scales with you — unified reporting, consistent security standards, and an integration that connects to your existing systems — so your operations team isn't drowning in manual reconciliation by location 30." },
+    vpBridge: "You've built scalable operational systems before. At SNHU and Reflekt Me, you weren't just launching programs — you were designing infrastructure that could grow without breaking. That lens translates directly to how you'd approach a multi-unit payment buildout."
+  },
+  {
+    title: "Manual Payment Operations & Inefficiency",
+    client: "Mid-size B2B services company",
+    industry: "Professional Services / B2B",
+    icon: "📂",
+    complexity: 3,
+    clientQuote: "We spend hours every week manually matching invoices to payments and chasing receivables. There has to be a better way.",
+    realProblem: "They're operating without automation between their payment acceptance and their accounting/ERP system. This is an accounts receivable and workflow integration problem — solvable, and high-value to fix.",
+    steps: [
+      { title: "Map the current AR workflow", desc: "Understand the full receivables cycle: how invoices are created, sent, paid, matched, and reconciled. Identify where humans are substituting for automation.", terms: ["accounts receivable (AR)", "invoice reconciliation", "remittance matching", "DSO (days sales outstanding)"] },
+      { title: "Identify the integration gap", desc: "Is their payment acceptance system disconnected from their accounting software (QuickBooks, NetSuite, SAP)? The fix is often an integrated payment platform or an API connection.", terms: ["ERP integration", "QuickBooks/NetSuite connector", "ACH payments", "virtual card acceptance"] },
+      { title: "Assess payment method mix for B2B", desc: "B2B clients often still rely on checks and ACH. Propose electronic payment options — virtual cards, ACH+, or integrated AP/AR solutions — that reduce manual handling.", terms: ["ACH", "virtual card (vCard)", "straight-through processing (STP)", "Level 2/Level 3 data"] },
+      { title: "Recommend automation and reporting tools", desc: "Introduce automated invoice matching, recurring billing if applicable, and a reporting dashboard that gives their finance team real-time AR visibility.", terms: ["automated reconciliation", "recurring billing", "payment reporting dashboard", "remittance advice"] },
+      { title: "Quantify the ROI", desc: "Calculate time saved per week × FTE cost. If they're spending 5 hours/week at $40/hr, that's $10K/year in recoverable capacity — plus faster cash flow from reduced DSO.", terms: ["ROI modeling", "DSO reduction", "working capital", "cash flow acceleration"] }
+    ],
+    interviewPhrases: [
+      { label: "Problem reframe", text: "What they're describing isn't really a payments problem — it's a workflow automation problem that happens to sit at the intersection of payments and accounting. My job is to connect those two worlds." },
+      { label: "ROI anchor", text: "I'd want to quantify what they're losing. If their team is spending 8 hours a week on manual reconciliation, that's over $20K a year in labor cost — and that's before factoring in the revenue impact of slower collections." }
+    ],
+    traps: [{ label: "Don't do this", text: "Recommend products without quantifying the problem first. If you can't show them the cost of their current state, you can't make the case for change." }],
+    reframe: { wrong: "We have integrated payment solutions that automate reconciliation.", better: "Based on what you described, I'd want to calculate your current DSO and weekly AR labor hours before we talk solutions. Once we know the cost of the problem, we can build the right case for automation — and I can show you exactly what ROI you'd expect." },
+    vpBridge: "Your product management background gives you a powerful lens here. You know how to map a user journey, find the friction, and design the fix. In merchant services, that same skill set surfaces solutions clients didn't know they needed — which is what makes a BRM indispensable rather than replaceable."
+  },
+  {
+    title: "At-Risk Client Relationship",
+    client: "Long-term established account",
+    industry: "Any industry — retention scenario",
+    icon: "⚠️",
+    complexity: 5,
+    clientQuote: "We've had too many issues since implementation. We're starting to look at other options.",
+    realProblem: "Trust has eroded. The client feels unseen and unsupported. The solution isn't technical — it's relational. But you also need to demonstrate operational follow-through or the relationship will not recover.",
+    steps: [
+      { title: "Request an urgent in-person or video meeting", desc: "Don't manage this by email or phone. Show up. Physical presence signals that you take the relationship seriously. Ask to hear everything — don't defend until you've fully listened.", terms: ["executive escalation", "relationship recovery meeting", "client health score"] },
+      { title: "Conduct a structured issues audit", desc: "Catalog every open issue, complaint, and unresolved commitment. Put it in writing and share it with the client. Transparency about what went wrong is the first step to rebuilding credibility.", terms: ["implementation review", "issue log", "SLA breach", "root cause analysis"] },
+      { title: "Create a written recovery plan with owners and timelines", desc: "Assign named internal owners to each open item. Give the client a timeline for resolution. Follow up before the deadline, not after.", terms: ["corrective action plan", "escalation path", "executive sponsor", "30-60-90 plan"] },
+      { title: "Neutralize the competitive threat", desc: "Understand who they're evaluating. Position switching costs honestly — migration risk, integration rebuild time, data continuity — without being manipulative. Show what staying and resolving looks like.", terms: ["competitive displacement risk", "switching cost analysis", "retention incentive", "contract renewal"] },
+      { title: "Shift to strategic account mode post-recovery", desc: "Once trust is rebuilt, reposition the relationship around strategic planning — QBRs, roadmap conversations, growth planning. Move from firefighting to partnership.", terms: ["QBR", "strategic account plan", "wallet share", "cross-sell opportunity", "net revenue retention"] }
+    ],
+    interviewPhrases: [
+      { label: "Leadership signal", text: "My first call would be to get in front of them — not to explain ourselves, but to listen completely. A client that's threatening to leave is a client who still wants to be heard. My job at that point is to show up and earn the right to fix it." },
+      { label: "Accountability framing", text: "I'd put together a written recovery plan with named owners and dates — not because it's policy, but because that's what restores credibility. Promises are cheap. A written plan with follow-through is the differentiator." }
+    ],
+    traps: [{ label: "Don't do this", text: "Offer discounts or incentives before resolving the underlying issues. Clients can tell when you're trying to buy their silence rather than earn back their trust. Discounts without operational improvements just delay the departure." }],
+    reframe: { wrong: "We can offer you a rate adjustment to smooth things over.", better: "Before we talk about any commercial changes, I want to make sure we've earned your confidence back operationally. Let me show you the recovery plan, close out every open item, and then we can have the commercial conversation from a position of trust." },
+    vpBridge: "This scenario is where your student affairs and institutional leadership experience shines hardest. You've navigated difficult stakeholder situations where the emotional temperature was high and the facts were contested. The composure, the structure, and the follow-through you bring to those situations is genuinely rare in sales environments."
+  },
+  {
+    title: "New Client Onboarding & Competitive Win",
+    client: "Newly acquired merchant switching from Fiserv or Square",
+    industry: "Any — new business scenario",
+    icon: "✅",
+    complexity: 3,
+    clientQuote: "We decided to go with Chase. We need to make sure this transition is smooth — our last switch was a disaster.",
+    realProblem: "First impressions after the sale determine whether this client stays long-term. A flawed onboarding creates the exact conditions for a future at-risk relationship. Your job is to build trust through operational excellence from day one.",
+    steps: [
+      { title: "Set a structured onboarding plan immediately", desc: "Within 48 hours of close, send a written onboarding plan with key milestones, stakeholder contacts, and your direct contact. Clients who just switched need certainty.", terms: ["merchant onboarding", "MID (Merchant ID)", "boarding timeline", "go-live date"] },
+      { title: "Capture full operational requirements", desc: "Conduct a discovery call with their operations team — not just the decision-maker. Understand POS setup, employee roles, reporting needs, and any integration requirements before anything is configured.", terms: ["operational requirements", "POS deployment", "gateway configuration", "user permissions"] },
+      { title: "Manage the data migration carefully", desc: "If they have card-on-file data from a previous processor, coordinate a compliant token migration. Loss of stored payment data is a serious operational disruption for subscription or recurring businesses.", terms: ["token migration", "network tokenization", "card-on-file", "PCI-compliant data transfer"] },
+      { title: "Train their team — not just their IT", desc: "Schedule a 60-minute training session with the front-line staff who will actually operate the terminals and handle disputes. Documentation alone doesn't stick.", terms: ["terminal training", "dispute workflow training", "user adoption", "chargeback prevention"] },
+      { title: "Conduct a 30-day health check", desc: "At day 30, review authorization rates, any declined transaction patterns, dispute volume, and team satisfaction. Surface any friction before it becomes a complaint.", terms: ["30-day review", "authorization rate baseline", "client health check", "early-warning indicators"] }
+    ],
+    interviewPhrases: [
+      { label: "Differentiation signal", text: "Onboarding is where relationships are made or broken. My approach is to over-communicate in the first 30 days — written plans, proactive check-ins, and a 30-day review meeting that I put on the calendar the day they sign." },
+      { label: "Competitive awareness", text: "When a client is coming from Fiserv or Square, they've experienced a different model. I want to show them within the first 30 days that Chase's approach is categorically different — and that starts with how I show up personally in the onboarding process." }
+    ],
+    traps: [{ label: "Don't do this", text: "Hand off the onboarding to an implementation team and go quiet. The BRM owns the relationship continuity — even if technical teams execute the work. Disappearing after the close is the fastest way to create a future at-risk situation." }],
+    reframe: { wrong: "Our implementation team will reach out to set things up.", better: "I'll be personally involved throughout your onboarding. Here's the plan I've put together — milestones, contacts, and a 30-day review already scheduled. You'll never wonder where things stand." },
+    vpBridge: "Your experience designing onboarding systems and student success frameworks is directly applicable. You know that the first 30–60 days of any new relationship set the behavioral patterns for everything that follows. Applying that lens to merchant onboarding puts you ahead of 90% of BRMs who treat it as a handoff, not a launch."
   }
-  const isVideo = file.type.includes('video') || file.name.toLowerCase().endsWith('.mp4');
-  const url = URL.createObjectURL(file);
-  const sizeMB = (file.size / (1024*1024)).toFixed(1);
-  document.getElementById('audio-filename').textContent = file.name;
-  document.getElementById('audio-filesize').textContent = sizeMB + ' MB · ' + (isVideo ? 'Video' : 'Audio');
-  const videoEl = document.getElementById('audio-player-video');
-  const audioEl = document.getElementById('audio-player-audio');
-  if (isVideo) {
-    videoEl.src = url;
-    videoEl.style.display = 'block';
-    audioEl.style.display = 'none';
-  } else {
-    audioEl.src = url;
-    audioEl.style.display = 'block';
-    videoEl.style.display = 'none';
-  }
-  document.getElementById('audio-upload-zone').style.display = 'none';
-  document.getElementById('audio-player-section').style.display = 'block';
-  document.getElementById('audio-error').style.display = 'none';
-}
-function clearAudioPlayer() {
-  const videoEl = document.getElementById('audio-player-video');
-  const audioEl = document.getElementById('audio-player-audio');
-  videoEl.pause(); videoEl.src = '';
-  audioEl.pause(); audioEl.src = '';
-  videoEl.style.display = 'none';
-  audioEl.style.display = 'none';
-  document.getElementById('audio-player-section').style.display = 'none';
-  document.getElementById('audio-upload-zone').style.display = 'block';
-  document.getElementById('audio-file-input').value = '';
-}
-function showAudioError(msg) {
-  const el = document.getElementById('audio-error');
-  document.getElementById('audio-error-msg').textContent = msg;
-  el.style.display = 'block';
-}
-function showView(id,btn){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));document.getElementById('view-'+id).classList.add('active');if(btn)btn.classList.add('active');document.getElementById('topbar-title').textContent=viewTitles[id]||id;if(window.innerWidth<=768)document.getElementById('sidebar').classList.remove('open');}
-function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');}
-function copyQ(item){const text=item.querySelector('.q-text').textContent;navigator.clipboard.writeText(text).catch(()=>{});const copied=item.querySelector('.q-copied');copied.style.display='inline-block';setTimeout(()=>copied.style.display='none',1800);}
+];
 
-renderConcepts();renderFC();renderChecklist();renderScenarios();renderGlossary();
+let activeIdx = 0;
+let activeTab = "steps";
+
+function renderNav() {
+  const nav = document.getElementById("nav");
+  nav.innerHTML = scenarios.map((s, i) => `
+    <button class="nav-btn ${i === activeIdx ? "active" : ""}" onclick="selectScenario(${i})">
+      ${s.icon} ${i + 1}. ${s.industry.split("/")[0].trim()}
+    </button>
+  `).join("");
+}
+
+function renderScenarioCard() {
+  const s = scenarios[activeIdx];
+  document.getElementById("sc-icon").textContent = s.icon;
+  document.getElementById("sc-title").textContent = s.title;
+  document.getElementById("sc-subtitle").textContent = `${s.client} · ${s.industry}`;
+  document.getElementById("sc-quote").textContent = `"${s.clientQuote}"`;
+  document.getElementById("sc-problem").textContent = s.realProblem;
+
+  const pips = document.getElementById("complexity-pips");
+  pips.innerHTML = [1,2,3,4,5].map(n =>
+    `<div class="pip ${n <= s.complexity ? "filled" : ""}"></div>`
+  ).join("");
+
+  document.getElementById("footer-count").textContent = `Scenario ${activeIdx + 1} of ${scenarios.length}`;
+  document.getElementById("btn-prev").disabled = activeIdx === 0;
+  document.getElementById("btn-next").disabled = activeIdx === scenarios.length - 1;
+}
+
+function renderSteps() {
+  const s = scenarios[activeIdx];
+  document.getElementById("tab-steps").innerHTML = s.steps.map((step, i) => `
+    <div class="step-item">
+      <div class="step-num">${i + 1}</div>
+      <div class="step-content">
+        <div class="step-title">${step.title}</div>
+        <div class="step-desc">${step.desc}</div>
+        <div class="step-terms">
+          ${step.terms.map((t, ti) => `<span class="term-pill term-${ti % 4}">${t}</span>`).join("")}
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+
+function renderLanguage() {
+  const s = scenarios[activeIdx];
+  document.getElementById("tab-language").innerHTML =
+    s.interviewPhrases.map(p => `
+      <div class="phrase-card">
+        <div class="phrase-label">${p.label}</div>
+        <div class="phrase-text">"${p.text}"</div>
+      </div>
+    `).join("") +
+    `<div class="vp-bridge">
+      <div class="vp-bridge-icon">🔗</div>
+      <div>
+        <div class="vp-bridge-label">Your value proposition bridge</div>
+        <div class="vp-bridge-text">${s.vpBridge}</div>
+      </div>
+    </div>`;
+}
+
+function renderTraps() {
+  const s = scenarios[activeIdx];
+  document.getElementById("tab-traps").innerHTML =
+    s.traps.map(t => `
+      <div class="trap-card">
+        <div class="trap-icon">⚡</div>
+        <div>
+          <div class="trap-label">${t.label}</div>
+          <div class="trap-text">${t.text}</div>
+        </div>
+      </div>
+    `).join("") +
+    `<div class="reframe-card">
+      <div class="reframe-label">Reframe this language</div>
+      <div class="reframe-weak">
+        <div class="reframe-weak-label">❌ Weak</div>
+        <div class="reframe-weak-text">"${s.reframe.wrong}"</div>
+      </div>
+      <div class="reframe-strong">
+        <div class="reframe-strong-label">✓ Strong</div>
+        <div class="reframe-strong-text">"${s.reframe.better}"</div>
+      </div>
+    </div>`;
+}
+
+function switchTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll(".tab-btn").forEach((btn, i) => {
+    const tabs = ["steps", "language", "traps"];
+    btn.classList.toggle("active", tabs[i] === tab);
+  });
+  document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+  document.getElementById("tab-" + tab).classList.add("active");
+}
+
+function selectScenario(i) {
+  activeIdx = i;
+  activeTab = "steps";
+  renderNav();
+  renderScenarioCard();
+  renderSteps();
+  renderLanguage();
+  renderTraps();
+  switchTab("steps");
+}
+
+function navigate(dir) {
+  const next = activeIdx + dir;
+  if (next >= 0 && next < scenarios.length) selectScenario(next);
+}
+
+// Init
+selectScenario(0);
 </script>
 </body>
 </html>
